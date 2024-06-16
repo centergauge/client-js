@@ -1,0 +1,51 @@
+{
+  "name": "@centergauge/client",
+  "description": "CenterGauge Client",
+  "version": "0.0.1-alpha.0",
+  "type": "module",
+  "author": "CenterGauge, Inc",
+  "publishConfig": {
+    "access": "public"
+  },
+  "license": "BSD-3-Clause",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/centergauge/client-js.git"
+  },
+  "files": [
+    "**"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "postbuild": "prettier --check . && gts lint && cp package.json dist",
+    "watch": "tsc -w",
+    "test": "vitest run --coverage",
+    "lint": "gts lint",
+    "clean": "rm -rf dist && rm -rf site && rm -rf coverage",
+    "fix": "gts fix",
+    "makepretty": "prettier --write .",
+    "site": "typedoc --out site \"src/**/*.ts\" --exclude \"src/**/*.test.ts\""
+  },
+  "devDependencies": {
+    "@types/node": "^20.14.2",
+    "@vitest/coverage-v8": "^1.6.0",
+    "gts": "^5.3.1",
+    "tslib": "^2.6.3",
+    "typedoc": "^0.25.13",
+    "typescript": "~5.4.5",
+    "vitest": "^1.6.0"
+  },
+  "dependencies": {
+    "@authsure/flow-client": "^0.0.2",
+    "axios": "^1.7.2"
+  },
+  "peerDependencies": {
+    "axios": ">=1.7.2"
+  },
+  "exports": {
+    ".": {
+      "import": "./index.js",
+      "types": "./index.d.ts"
+    }
+  }
+}

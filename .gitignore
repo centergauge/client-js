@@ -1,0 +1,11 @@
+notes.txt
+*.zip
+*.js
+!jest.config.js
+*.d.ts
+node_modules
+dist
+!.prettierrc.js
+src/oneoff.test.ts
+site
+coverage
