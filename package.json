@@ -16,6 +16,7 @@
     "**"
   ],
   "scripts": {
+    "codegen": "pnpx @aws-amplify/cli codegen && sed -i '' 's/\\.\\.\\/API/\\.\\.\\/API.js/g' src/graphql/* && prettier --write .",
     "build": "tsc",
     "postbuild": "prettier --check . && gts lint && cp package.json dist",
     "watch": "tsc -w",
@@ -27,6 +28,7 @@
     "site": "typedoc --out site \"src/**/*.ts\" --exclude \"src/**/*.test.ts\""
   },
   "devDependencies": {
+    "@types/cookie": "^0.6.0",
     "@types/node": "^20.14.2",
     "@vitest/coverage-v8": "^1.6.0",
     "gts": "^5.3.1",
@@ -36,11 +38,18 @@
     "vitest": "^1.6.0"
   },
   "dependencies": {
-    "@authsure/flow-client": "^0.0.2",
-    "axios": "^1.7.2"
+    "@authsure/flow-client": "^0.0.4",
+    "@aws-amplify/api-graphql": "^4.1.6",
+    "aws-amplify": "^6.3.6",
+    "axios": "^1.7.2",
+    "cookie": "^0.6.0"
   },
   "peerDependencies": {
-    "axios": ">=1.7.2"
+    "@authsure/flow-client": "^0.0.4",
+    "@aws-amplify/api-graphql": "^4.1.6",
+    "aws-amplify": "^6.3.6",
+    "axios": "^1.7.2",
+    "cookie": "^0.6.0"
   },
   "exports": {
     ".": {
