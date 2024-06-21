@@ -16,6 +16,13 @@ export const createIdentity =
     givenName
     familyName
     profilePicture
+    roles
+    assignments {
+      identityId
+      orgId
+      roles
+      __typename
+    }
     __typename
   }
 }
@@ -31,6 +38,13 @@ export const updateIdentity =
     givenName
     familyName
     profilePicture
+    roles
+    assignments {
+      identityId
+      orgId
+      roles
+      __typename
+    }
     __typename
   }
 }
@@ -46,6 +60,8 @@ export const createOrg =
     name
     lightIcon
     darkIcon
+    publicSignInEnabled
+    publicSupportEnabled
     __typename
   }
 }
@@ -61,10 +77,74 @@ export const updateOrg =
     name
     lightIcon
     darkIcon
+    publicSignInEnabled
+    publicSupportEnabled
     __typename
   }
 }
 ` as GeneratedMutation<
     APITypes.UpdateOrgMutationVariables,
     APITypes.UpdateOrgMutation
+  >;
+export const createIdentityAssignment =
+  /* GraphQL */ `mutation CreateIdentityAssignment($input: CreateIdentityAssignmentInput!) {
+  createIdentityAssignment(input: $input) {
+    identityId
+    orgId
+    roles
+    __typename
+  }
+}
+` as GeneratedMutation<
+    APITypes.CreateIdentityAssignmentMutationVariables,
+    APITypes.CreateIdentityAssignmentMutation
+  >;
+export const updateIdentityAssignment =
+  /* GraphQL */ `mutation UpdateIdentityAssignment($input: UpdateIdentityAssignmentInput!) {
+  updateIdentityAssignment(input: $input) {
+    identityId
+    orgId
+    roles
+    __typename
+  }
+}
+` as GeneratedMutation<
+    APITypes.UpdateIdentityAssignmentMutationVariables,
+    APITypes.UpdateIdentityAssignmentMutation
+  >;
+export const createIdentityAutoMapping =
+  /* GraphQL */ `mutation CreateIdentityAutoMapping($input: CreateIdentityAutoMappingInput!) {
+  createIdentityAutoMapping(input: $input) {
+    orgId
+    domain
+    __typename
+  }
+}
+` as GeneratedMutation<
+    APITypes.CreateIdentityAutoMappingMutationVariables,
+    APITypes.CreateIdentityAutoMappingMutation
+  >;
+export const updateIdentityAutoMapping =
+  /* GraphQL */ `mutation UpdateIdentityAutoMapping($input: UpdateIdentityAutoMappingInput!) {
+  updateIdentityAutoMapping(input: $input) {
+    orgId
+    domain
+    __typename
+  }
+}
+` as GeneratedMutation<
+    APITypes.UpdateIdentityAutoMappingMutationVariables,
+    APITypes.UpdateIdentityAutoMappingMutation
+  >;
+export const deleteIdentityAutoMapping =
+  /* GraphQL */ `mutation DeleteIdentityAutoMapping($input: DeleteIdentityAutoMappingInput!) {
+  deleteIdentityAutoMapping(input: $input) {
+    orgId
+    domain
+    __typename
+  }
+}
+` as GeneratedMutation<
+    APITypes.DeleteIdentityAutoMappingMutationVariables,
+    APITypes.DeleteIdentityAutoMappingMutation
   >;

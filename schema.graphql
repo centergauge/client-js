@@ -1,9 +1,14 @@
+#------------------------------------------------------------------------------
+# Identity
+#------------------------------------------------------------------------------
 type Identity {
   id: ID!
   email: String!
   givenName: String!
   familyName: String!
   profilePicture: String
+  roles: [String!]
+  assignments: [IdentityAssignment!]
 }
 
 input CreateIdentity {
@@ -22,12 +27,25 @@ input UpdateIdentity {
   profilePicture: String
 }
 
+#------------------------------------------------------------------------------
+# Org
+#------------------------------------------------------------------------------
+type OrgProfile {
+  id: ID!
+  slug: String!
+  name: String!
+  lightIcon: String
+  darkIcon: String
+}
+
 type Org {
   id: ID!
   slug: String!
   name: String!
   lightIcon: String
   darkIcon: String
+  publicSignInEnabled: Boolean
+  publicSupportEnabled: Boolean
 }
 
 input CreateOrgInput {
@@ -42,51 +60,100 @@ input UpdateOrgInput {
   darkIcon: String
 }
 
+#------------------------------------------------------------------------------
+# IdentityAutoMapping
+#------------------------------------------------------------------------------
+type IdentityAutoMapping {
+  orgId: ID!
+  domain: String!
+}
+
+input CreateIdentityAutoMappingInput {
+  orgId: ID!
+  domain: String!
+}
+
+input UpdateIdentityAutoMappingInput {
+  orgId: ID!
+  domain: String!
+}
+
+input DeleteIdentityAutoMappingInput {
+  orgId: ID!
+  domain: String!
+}
+
+#------------------------------------------------------------------------------
+# IdentityAssignment
+#------------------------------------------------------------------------------
+type IdentityAssignment {
+  identityId: ID!
+  orgId: ID!
+  roles: [String!]
+}
+
+input CreateIdentityAssignmentInput {
+  identityId: ID!
+  orgId: ID!
+  roles: [String!]!
+}
+
+input UpdateIdentityAssignmentInput {
+  identityId: ID!
+  orgId: ID!
+  roles: [String!]!
+}
+
+#------------------------------------------------------------------------------
+# Queries
+#------------------------------------------------------------------------------
+type Query {
+  # Identity
+  getIdentity(id: ID!): Identity
+
+  # Org
+  getOrgProfile(id: ID!): OrgProfile
+  getOrg(id: ID!): Org
+  findOrgBySlug(slug: String!): Org
+
+  # IdentityAssignment
+  getIdentityAssignment(identityId: ID!, orgId: ID!): IdentityAssignment
+  findIdentityAssignmentsByIdentity(identityId: ID!): [IdentityAssignment!]
+  findIdentityAssignmentsByOrg(orgId: ID!): [IdentityAssignment!]
+
+  # IdentityAutoMapping
+  getIdentityAutoMapping(orgId: ID!, domain: String!): IdentityAutoMapping
+  findIdentityAutoMappingsByDomain(domain: String!): [IdentityAutoMapping!]
+}
+
+#------------------------------------------------------------------------------
+# Mutations
+#------------------------------------------------------------------------------
 type Mutation {
+  # Identity
   createIdentity(input: CreateIdentity!): Identity
   updateIdentity(input: UpdateIdentity!): Identity
+
+  # Org
   createOrg(input: CreateOrgInput!): Org
   updateOrg(input: UpdateOrgInput!): Org
+
+  # IdentityAssignment
+  createIdentityAssignment(
+    input: CreateIdentityAssignmentInput!
+  ): IdentityAssignment
+  updateIdentityAssignment(
+    input: UpdateIdentityAssignmentInput!
+  ): IdentityAssignment
+
+  # IdentityAutoMapping
+  createIdentityAutoMapping(
+    input: CreateIdentityAutoMappingInput!
+  ): IdentityAutoMapping
+  updateIdentityAutoMapping(
+    input: UpdateIdentityAutoMappingInput!
+  ): IdentityAutoMapping
+  deleteIdentityAutoMapping(
+    input: DeleteIdentityAutoMappingInput!
+  ): IdentityAutoMapping
 }
-
-type Query {
-  getIdentity(id: String!): Identity
-  orgExists(slug: String!): Boolean
-}
-
-#type Query {
-#  getOrganizations: [Organization!]
-#}
-#
-#input OrganizationInput {
-#  slug: String!
-#  name: String!
-#  lightIcon: String
-#  darkIcon: String
-#}
-#
-#type Mutation {
-#  addOrganization(input: OrganizationInput!): Organization
-#}
-
-#type User {
-#  id: String!
-#  email: String!
-#  givenName: String!
-#  familyName: String!
-#  profilePicture: String
-#}
-#
-#type demo {
-#  id: String!
-#  version: String!
-#}
-#type Query {
-#  getDemos: [demo!]
-#}
-#input DemoInput {
-#  version: String!
-#}
-#type Mutation {
-#  addDemo(input: DemoInput!): demo
-#}

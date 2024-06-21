@@ -2,10 +2,10 @@ import {ClientCredentialsFlowClient} from '@authsure/flow-client';
 import {Amplify} from 'aws-amplify';
 import {generateClient, GraphQLResult} from 'aws-amplify/api';
 import {createIdentity, updateIdentity} from './graphql/mutations.js';
-import {CreateIdentity, Identity, UpdateIdentity} from './API.js';
+import {CreateIdentity, Identity, Org, UpdateIdentity} from './API.js';
 import {V6Client} from '@aws-amplify/api-graphql';
 import {ConsoleLogger} from 'aws-amplify/utils';
-import {getIdentity} from './graphql/queries.js';
+import {getIdentity, getOrg} from './graphql/queries.js';
 import {SafeResult} from './safe-result.js';
 import {CenterGaugeClientError, isCenterGaugeClientError} from './errors.js';
 
@@ -186,6 +186,25 @@ export class CenterGaugeClient {
   async updateIdentitySafe(input: UpdateIdentity) {
     return this.executeSafeResult(async () => {
       return this.updateIdentity(input);
+    });
+  }
+
+  async getOrg(id: string): Promise<Org> {
+    return this.executeGraphQL(async () => {
+      return (
+        await this.graphClient.graphql({
+          query: getOrg,
+          variables: {
+            id,
+          },
+        })
+      ).data.getOrg as Org;
+    });
+  }
+
+  async getOrgSafe(id: string): Promise<SafeResult<Org>> {
+    return this.executeSafeResult(async () => {
+      return this.getOrg(id);
     });
   }
 }
