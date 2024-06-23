@@ -29,20 +29,25 @@
   },
   "devDependencies": {
     "@types/cookie": "^0.6.0",
+    "@types/js-yaml": "^4.0.9",
     "@types/node": "^20.14.2",
     "@vitest/coverage-v8": "^1.6.0",
     "gts": "^5.3.1",
     "tslib": "^2.6.3",
     "typedoc": "^0.25.13",
+    "typedoc-plugin-zod": "^1.1.2",
     "typescript": "~5.4.5",
-    "vitest": "^1.6.0"
+    "vitest": "^1.6.0",
+    "zod": "^3.23.8"
   },
   "dependencies": {
     "@authsure/flow-client": "^0.0.4",
     "@aws-amplify/api-graphql": "^4.1.6",
     "aws-amplify": "^6.3.6",
     "axios": "^1.7.2",
-    "cookie": "^0.6.0"
+    "cookie": "^0.6.0",
+    "graphql": "^16.9.0",
+    "yaml": "^2.4.5"
   },
   "peerDependencies": {
     "@authsure/flow-client": "^0.0.4",
