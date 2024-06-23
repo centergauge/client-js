@@ -1,11 +1,11 @@
 import {ClientCredentialsFlowClient} from '@authsure/flow-client';
 import {Amplify} from 'aws-amplify';
 import {generateClient, GraphQLResult} from 'aws-amplify/api';
-import {GeneratedQuery, V6Client} from '@aws-amplify/api-graphql';
+import {V6Client} from '@aws-amplify/api-graphql';
 import {ConsoleLogger} from 'aws-amplify/utils';
 import {SafeResult} from './safe-result.mjs';
 import {CenterGaugeClientError, isCenterGaugeClientError} from './errors.mjs';
-import {graphQLSchemaString} from './zod-to-graphql.mjs';
+import {GraphQLQuery, graphQLSchemaString} from './zod-to-graphql.mjs';
 import {
   CreateIdentityInput,
   CreateIdentityMutationVariables,
@@ -143,38 +143,18 @@ export class CenterGaugeClient {
     }
   }
 
-  //   async getIdentity(id: string): Promise<Identity> {
-  //     return this.executeGraphQL<Identity>(async () => {
-  //       return (
-  //         await this.graphClient.graphql({
-  //           query: `query GetIdentity($id: ID!) {
-  //   getIdentity(id: $id) {
-  //     id
-  //     email
-  //     givenName
-  //     familyName
-  //     profilePicture
-  //     roles
-  //     assignments {
-  //       identityId
-  //       orgId
-  //       roles
-  //       __typename
-  //     }
-  //     __typename
-  //   }
-  // }
-  // ` as GeneratedQuery<
-  //             GetIdentityQueryVariables,
-  //               APITypes.GetIdentityQuery
-  //             >, // TODO string
-  //           variables: {
-  //             id,
-  //           },
-  //         })
-  //       ).data.getIdentity as Identity;
-  //     });
-  //   }
+  async query<O>(query: GraphQLQuery): Promise<O> {
+    return this.executeGraphQL<O>(async () => {
+      console.log(await this.graphClient.graphql(query));
+      return (await this.graphClient.graphql(query)) as O;
+    });
+  }
+
+  async querySafe<O>(query: GraphQLQuery): Promise<SafeResult<O>> {
+    return this.executeSafeResult(async () => {
+      return this.query<O>(query);
+    });
+  }
 
   // async getIdentity(id: string): Promise<Identity> {
   //   return this.executeGraphQL<Identity>(async () => {

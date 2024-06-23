@@ -39,7 +39,16 @@ interface RegistryEntry {
     | GraphQLInputType
     | ThunkObjMap<GraphQLFieldConfig<unknown, unknown>>;
 }
+
 type Registry = Map<string, RegistryEntry>;
+export type GraphQLQuery = {
+  variables: Record<any, any>;
+  query: string;
+};
+export type GraphQLMutation = {
+  variables: Record<any, any>;
+  query: string;
+};
 
 export function graphQLID(schema: ZodString) {
   (schema._def as any).isGraphQLID = true;
@@ -64,45 +73,111 @@ export function graphQLEnum(schema: ZodEnum<any>, name: string) {
   return schema;
 }
 
+function getRootZodObject(type: ZodTypeAny): ZodObject<any> | undefined {
+  if (type instanceof ZodObject) {
+    return type;
+  } else if (type instanceof ZodEffects) {
+    return getRootZodObject(type._def.schema);
+  } else if (type instanceof ZodOptional) {
+    return getRootZodObject(type._def.innerType);
+  } else if (type instanceof ZodArray) {
+    return getRootZodObject(type.element);
+  }
+  return undefined;
+}
+
+function toGraphQLBlockString(indent: string, schema: ZodTypeAny): string {
+  const root = getRootZodObject(schema);
+  if (root === undefined) {
+    throw new Error('Root ZodObject not found');
+  }
+  let queryStr = '{';
+  for (const [key, value] of Object.entries(root.shape)) {
+    queryStr += `\n${indent}  ${key}`;
+    const valueRoot = getRootZodObject(value as ZodTypeAny);
+    if (valueRoot instanceof ZodObject) {
+      queryStr +=
+        ' ' + toGraphQLBlockString(indent + '  ', value as ZodTypeAny);
+    }
+  }
+  queryStr += `\n${indent}  __typename`;
+  queryStr += `\n${indent}}`;
+  return queryStr;
+}
+
+function toGraphQLParamsString(schema: ZodObject<any>): string {
+  let queryStr = '';
+  for (const [key, value] of Object.entries(schema.shape)) {
+    if (value instanceof ZodString) {
+      if ((value._def as any).isGraphQLID) {
+        queryStr += `$${key}: ID!, `;
+      } else {
+        queryStr += `$${key}: String!, `;
+      }
+    } else {
+      const valueRoot = getRootZodObject(value as ZodTypeAny);
+      if (valueRoot instanceof ZodObject) {
+        queryStr += `$${key}: ${getGraphQLName(valueRoot)}!, `;
+      } else {
+        throw new Error('Unsupported mutation variable type');
+      }
+    }
+  }
+  queryStr = queryStr.slice(0, -2); // Remove the trailing comma and space
+  return queryStr;
+}
+
 export function graphQLQuery(
   name: string,
-  queryVariablesSchema: ZodSchema<any>,
-  outputSchema: ZodSchema<any>
+  queryVariablesSchema: ZodObject<any>,
+  outputSchema: ZodObject<any>
 ) {
   (queryVariablesSchema._def as any).graphQLName = name;
   (queryVariablesSchema._def as any).graphQLType = 'query';
   (queryVariablesSchema._def as any).graphQLOutputSchema = outputSchema;
-  return function (variables: z.infer<typeof queryVariablesSchema>) {
-    console.log('Moo', variables);
-    // return this.executeGraphQL(async () => {
-    //   return (
-    //     await this.graphClient.graphql({
-    //       query: outputSchema,
-    //       variables,
-    //     })
-    //   ).data[name] as T;
-    // });
+  return function (
+    variables: z.infer<typeof queryVariablesSchema>
+  ): GraphQLQuery {
+    let queryStr =
+      `query ${name}(` +
+      toGraphQLParamsString(queryVariablesSchema) +
+      `) {\n  ${name}(`;
+    for (const key of Object.keys(queryVariablesSchema.shape)) {
+      queryStr += `${key}: $${key}, `;
+    }
+    queryStr = queryStr.slice(0, -2); // Remove the trailing comma and space
+    queryStr += ') ' + toGraphQLBlockString('  ', outputSchema) + '\n}';
+    return {
+      variables,
+      query: queryStr,
+    };
   };
 }
 
 export function graphQLMutation(
   name: string,
-  mutationVariablesSchema: ZodSchema<any>,
-  outputSchema: ZodSchema<any>
+  mutationVariablesSchema: ZodObject<any>,
+  outputSchema: ZodObject<any>
 ) {
   (mutationVariablesSchema._def as any).graphQLName = name;
   (mutationVariablesSchema._def as any).graphQLType = 'mutation';
   (mutationVariablesSchema._def as any).graphQLOutputSchema = outputSchema;
-  return function (variables: z.infer<typeof mutationVariablesSchema>) {
-    console.log('Moo', variables);
-    // return this.executeGraphQL(async () => {
-    //   return (
-    //     await this.graphClient.graphql({
-    //       query: outputSchema,
-    //       variables,
-    //     })
-    //   ).data[name] as T;
-    // });
+  return function (
+    variables: z.infer<typeof mutationVariablesSchema>
+  ): GraphQLMutation {
+    let queryStr =
+      `mutation ${name}(` +
+      toGraphQLParamsString(mutationVariablesSchema) +
+      `) {\n  ${name}(`;
+    for (const key of Object.keys(mutationVariablesSchema.shape)) {
+      queryStr += `${key}: $${key}, `;
+    }
+    queryStr = queryStr.slice(0, -2); // Remove the trailing comma and space
+    queryStr += ') ' + toGraphQLBlockString('  ', outputSchema) + '\n}';
+    return {
+      variables,
+      query: queryStr,
+    };
   };
 }
 

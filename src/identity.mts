@@ -46,7 +46,7 @@ export const IdentityOrgAssignment = graphQLType(
 export type IdentityOrgAssignment = z.infer<typeof IdentityOrgAssignment>;
 
 ///////////////////////////////////////////////////////////////////////////////
-// GetIdentity
+// getIdentity()
 ///////////////////////////////////////////////////////////////////////////////
 export const GetIdentityOutput = graphQLType(
   Identity.extend({
@@ -66,11 +66,11 @@ export type GetIdentityQueryVariables = z.infer<
 export const getIdentity = graphQLQuery(
   'getIdentity',
   GetIdentityQueryVariables,
-  GetIdentityOutput.optional()
+  GetIdentityOutput
 );
 
 ///////////////////////////////////////////////////////////////////////////////
-// CreateIdentity
+// createIdentity()
 ///////////////////////////////////////////////////////////////////////////////
 export const CreateIdentityInput = graphQLInput(
   Identity.extend({}),
