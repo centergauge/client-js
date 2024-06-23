@@ -3,17 +3,8 @@
   "compilerOptions": {
     "rootDir": "./src",
     "outDir": "./dist",
-    "target": "ES2022",
-    "module": "NodeNext",
-    "esModuleInterop": true,
-    "moduleResolution": "NodeNext",
-    "importHelpers": true,
-    "lib": ["ES2022", "dom"],
-    "declaration": true,
-    "declarationMap": true,
-    "inlineSources": true,
-    "types": ["node"]
+    "lib": ["ES2020", "dom"]
   },
   "include": ["src"],
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules", "src/**/*.test.ts"]
 }

@@ -6,8 +6,8 @@ import {
   graphQLMutation,
   graphQLQuery,
   graphQLType,
-} from './zod-to-graphql.mjs';
-import {OrgId} from './org.mjs';
+} from './zod-to-graphql.js';
+import {OrgId} from './org.js';
 
 export const IdentityId = graphQLID(z.string()).uuid();
 

@@ -3,9 +3,9 @@ import {Amplify} from 'aws-amplify';
 import {generateClient, GraphQLResult} from 'aws-amplify/api';
 import {V6Client} from '@aws-amplify/api-graphql';
 import {ConsoleLogger} from 'aws-amplify/utils';
-import {SafeResult} from './safe-result.mjs';
-import {CenterGaugeClientError, isCenterGaugeClientError} from './errors.mjs';
-import {GraphQLQuery, graphQLSchemaString} from './zod-to-graphql.mjs';
+import {SafeResult} from './safe-result.js';
+import {CenterGaugeClientError, isCenterGaugeClientError} from './errors.js';
+import {GraphQLQuery, graphQLSchemaString} from './zod-to-graphql.js';
 import {
   CreateIdentityInput,
   CreateIdentityMutationVariables,
@@ -16,7 +16,7 @@ import {
   IdentityOrgAssignment,
   OrgAssignment,
   OrgRole,
-} from './identity.mjs';
+} from './identity.js';
 
 export interface ClientCredentialsConfig {
   readonly clientId: string | Promise<string>;

@@ -42,11 +42,11 @@ interface RegistryEntry {
 
 type Registry = Map<string, RegistryEntry>;
 export type GraphQLQuery = {
-  variables: Record<any, any>;
+  variables: Record<string | number | symbol, unknown>;
   query: string;
 };
 export type GraphQLMutation = {
-  variables: Record<any, any>;
+  variables: Record<string | number | symbol, unknown>;
   query: string;
 };
 

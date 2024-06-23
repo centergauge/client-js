@@ -29,6 +29,9 @@ importers:
       yaml:
         specifier: ^2.4.5
         version: 2.4.5
+      zod:
+        specifier: ^3.23.8
+        version: 3.23.8
     devDependencies:
       '@types/cookie':
         specifier: ^0.6.0
@@ -60,9 +63,6 @@ importers:
       vitest:
         specifier: ^1.6.0
         version: 1.6.0(@types/node@20.14.8)
-      zod:
-        specifier: ^3.23.8
-        version: 3.23.8
 
 packages:
 

@@ -1,4 +1,4 @@
-import {CenterGaugeClientError} from './errors.mjs';
+import {CenterGaugeClientError} from './errors.js';
 
 /**
  * Result object for safe methods.

@@ -1,11 +1,12 @@
+// eslint-disable-next-line n/no-unpublished-import
 import {expect, test} from 'vitest';
-import {createIdentity, getIdentity} from './identity.mjs';
+import {createIdentity, getIdentity} from './identity.js';
 
 test('Test getIdentity', () => {
   const query = getIdentity({id: 'test'});
   expect(query.variables).toEqual({id: 'test'});
   expect(query.query).toEqual(
-    'query getIdentity($id: String!) {\n' +
+    'query getIdentity($id: ID!) {\n' +
       '  getIdentity(id: $id) {\n' +
       '    id\n' +
       '    givenName\n' +
