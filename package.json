@@ -17,7 +17,7 @@
   ],
   "scripts": {
     "build": "tsc",
-    "postbuild": "prettier --check . && gts lint && cp package.json dist",
+    "prebuild": "prettier --check . && gts lint && cp package.json dist",
     "watch": "tsc -w",
     "test": "vitest run --coverage",
     "lint": "gts lint",
