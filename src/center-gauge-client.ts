@@ -143,14 +143,17 @@ export class CenterGaugeClient {
     }
   }
 
-  async query<O>(query: GraphQLQuery): Promise<O> {
+  async query<O>(query: GraphQLQuery): Promise<O | null> {
     return this.executeGraphQL<O>(async () => {
       console.log(await this.graphClient.graphql(query));
-      return (await this.graphClient.graphql(query)) as O;
+      const result = (await this.graphClient.graphql(
+        query
+      )) as GraphQLResult<unknown>;
+      return result.data as O;
     });
   }
 
-  async querySafe<O>(query: GraphQLQuery): Promise<SafeResult<O>> {
+  async querySafe<O>(query: GraphQLQuery): Promise<SafeResult<O | null>> {
     return this.executeSafeResult(async () => {
       return this.query<O>(query);
     });

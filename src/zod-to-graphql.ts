@@ -130,7 +130,7 @@ function toGraphQLParamsString(schema: ZodObject<any>): string {
 export function graphQLQuery(
   name: string,
   queryVariablesSchema: ZodObject<any>,
-  outputSchema: ZodObject<any>
+  outputSchema: ZodTypeAny
 ) {
   (queryVariablesSchema._def as any).graphQLName = name;
   (queryVariablesSchema._def as any).graphQLType = 'query';
@@ -157,7 +157,7 @@ export function graphQLQuery(
 export function graphQLMutation(
   name: string,
   mutationVariablesSchema: ZodObject<any>,
-  outputSchema: ZodObject<any>
+  outputSchema: ZodTypeAny
 ) {
   (mutationVariablesSchema._def as any).graphQLName = name;
   (mutationVariablesSchema._def as any).graphQLType = 'mutation';

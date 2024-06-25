@@ -23,6 +23,7 @@ export const OrgAssignment = graphQLType(
   }),
   'OrgAssignment'
 );
+export type OrgAssignment = z.infer<typeof OrgAssignment>;
 
 export const Identity = graphQLType(
   z.object({
@@ -31,7 +32,7 @@ export const Identity = graphQLType(
     familyName: z.string().max(60),
     email: z.string().email(),
     profilePicture: z.string().url().optional(),
-    roles: z.array(z.string()),
+    roles: z.array(z.string()).optional(),
   }),
   'Identity'
 );
@@ -50,7 +51,7 @@ export type IdentityOrgAssignment = z.infer<typeof IdentityOrgAssignment>;
 ///////////////////////////////////////////////////////////////////////////////
 export const GetIdentityOutput = graphQLType(
   Identity.extend({
-    assignments: z.array(OrgAssignment),
+    assignments: z.array(OrgAssignment).optional(),
   }),
   'GetIdentityOutput'
 );
@@ -66,7 +67,7 @@ export type GetIdentityQueryVariables = z.infer<
 export const getIdentity = graphQLQuery(
   'getIdentity',
   GetIdentityQueryVariables,
-  GetIdentityOutput
+  GetIdentityOutput.optional()
 );
 
 ///////////////////////////////////////////////////////////////////////////////

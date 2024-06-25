@@ -9,3 +9,4 @@ dist
 src/oneoff.test.ts
 site
 coverage
+schema.graphql
