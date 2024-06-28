@@ -27,7 +27,12 @@ test('Test getIdentity', () => {
 
 test('Test createIdentity', () => {
   const query = createIdentity({
-    input: {givenName: 'test', familyName: 'test', email: 'test@example.com'},
+    input: {
+      id: 'test',
+      givenName: 'test',
+      familyName: 'test',
+      email: 'test@example.com',
+    },
   });
   expect(query.variables).toEqual({
     input: {givenName: 'test', familyName: 'test', email: 'test@example.com'},

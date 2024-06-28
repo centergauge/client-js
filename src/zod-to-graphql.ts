@@ -19,7 +19,6 @@ import {
 } from 'graphql';
 import {
   z,
-  ZodSchema,
   ZodArray,
   ZodEffects,
   ZodObject,
@@ -28,10 +27,18 @@ import {
   ZodString,
   ZodOptional,
   ZodEnum,
+  ZodTypeDef,
 } from 'zod';
 
+export interface GraphQLZodTypeDef extends ZodTypeDef {
+  isGraphQLID?: boolean;
+  graphQLName?: string;
+  graphQLType?: 'type' | 'input' | 'enum' | 'query' | 'mutation';
+  graphQLOutputSchema?: ZodTypeAny;
+}
+
 interface RegistryEntry {
-  schema: ZodSchema;
+  schema: ZodObject<ZodRawShape> | ZodEnum<[string, ...string[]]>;
   type: 'type' | 'input' | 'enum' | 'query' | 'mutation';
   graphQLType?:
     | GraphQLObjectType
@@ -41,6 +48,7 @@ interface RegistryEntry {
 }
 
 type Registry = Map<string, RegistryEntry>;
+
 export type GraphQLQuery = {
   variables: Record<string | number | symbol, unknown>;
   query: string;
@@ -51,29 +59,40 @@ export type GraphQLMutation = {
 };
 
 export function graphQLID(schema: ZodString) {
-  (schema._def as any).isGraphQLID = true;
+  (schema._def as GraphQLZodTypeDef).isGraphQLID = true;
   return schema;
 }
 
-export function graphQLType(schema: ZodObject<any>, name: string) {
-  (schema._def as any).graphQLName = name;
-  (schema._def as any).graphQLType = 'type';
+export function graphQLType<T extends ZodRawShape>(
+  shape: ZodObject<T>,
+  name: string
+) {
+  (shape._def as GraphQLZodTypeDef).graphQLName = name;
+  (shape._def as GraphQLZodTypeDef).graphQLType = 'type';
+  return shape;
+}
+
+export function graphQLInput<T extends ZodRawShape>(
+  shape: ZodObject<T>,
+  name: string
+) {
+  (shape._def as GraphQLZodTypeDef).graphQLName = name;
+  (shape._def as GraphQLZodTypeDef).graphQLType = 'input';
+  return shape;
+}
+
+export function graphQLEnum<T extends [string, ...string[]]>(
+  schema: ZodEnum<T>,
+  name: string
+) {
+  (schema._def as GraphQLZodTypeDef).graphQLName = name;
+  (schema._def as GraphQLZodTypeDef).graphQLType = 'enum';
   return schema;
 }
 
-export function graphQLInput(schema: ZodObject<any>, name: string) {
-  (schema._def as any).graphQLName = name;
-  (schema._def as any).graphQLType = 'input';
-  return schema;
-}
-
-export function graphQLEnum(schema: ZodEnum<any>, name: string) {
-  (schema._def as any).graphQLName = name;
-  (schema._def as any).graphQLType = 'enum';
-  return schema;
-}
-
-function getRootZodObject(type: ZodTypeAny): ZodObject<any> | undefined {
+function getRootZodObject<T extends ZodRawShape>(
+  type: ZodTypeAny
+): ZodObject<T> | undefined {
   if (type instanceof ZodObject) {
     return type;
   } else if (type instanceof ZodEffects) {
@@ -105,11 +124,13 @@ function toGraphQLBlockString(indent: string, schema: ZodTypeAny): string {
   return queryStr;
 }
 
-function toGraphQLParamsString(schema: ZodObject<any>): string {
+function toGraphQLParamsString<T extends ZodRawShape>(
+  schema: ZodObject<T>
+): string {
   let queryStr = '';
   for (const [key, value] of Object.entries(schema.shape)) {
     if (value instanceof ZodString) {
-      if ((value._def as any).isGraphQLID) {
+      if ((value._def as GraphQLZodTypeDef).isGraphQLID) {
         queryStr += `$${key}: ID!, `;
       } else {
         queryStr += `$${key}: String!, `;
@@ -127,14 +148,15 @@ function toGraphQLParamsString(schema: ZodObject<any>): string {
   return queryStr;
 }
 
-export function graphQLQuery(
+export function graphQLQuery<T extends ZodRawShape>(
   name: string,
-  queryVariablesSchema: ZodObject<any>,
+  queryVariablesSchema: ZodObject<T>,
   outputSchema: ZodTypeAny
 ) {
-  (queryVariablesSchema._def as any).graphQLName = name;
-  (queryVariablesSchema._def as any).graphQLType = 'query';
-  (queryVariablesSchema._def as any).graphQLOutputSchema = outputSchema;
+  (queryVariablesSchema._def as GraphQLZodTypeDef).graphQLName = name;
+  (queryVariablesSchema._def as GraphQLZodTypeDef).graphQLType = 'query';
+  (queryVariablesSchema._def as GraphQLZodTypeDef).graphQLOutputSchema =
+    outputSchema;
   return function (
     variables: z.infer<typeof queryVariablesSchema>
   ): GraphQLQuery {
@@ -154,14 +176,15 @@ export function graphQLQuery(
   };
 }
 
-export function graphQLMutation(
+export function graphQLMutation<T extends ZodRawShape>(
   name: string,
-  mutationVariablesSchema: ZodObject<any>,
+  mutationVariablesSchema: ZodObject<T>,
   outputSchema: ZodTypeAny
 ) {
-  (mutationVariablesSchema._def as any).graphQLName = name;
-  (mutationVariablesSchema._def as any).graphQLType = 'mutation';
-  (mutationVariablesSchema._def as any).graphQLOutputSchema = outputSchema;
+  (mutationVariablesSchema._def as GraphQLZodTypeDef).graphQLName = name;
+  (mutationVariablesSchema._def as GraphQLZodTypeDef).graphQLType = 'mutation';
+  (mutationVariablesSchema._def as GraphQLZodTypeDef).graphQLOutputSchema =
+    outputSchema;
   return function (
     variables: z.infer<typeof mutationVariablesSchema>
   ): GraphQLMutation {
@@ -181,8 +204,10 @@ export function graphQLMutation(
   };
 }
 
-function getGraphQLName(schema: ZodObject<any> | ZodEnum<any>): string {
-  const name = (schema._def as any).graphQLName;
+function getGraphQLName<T extends ZodRawShape>(
+  schema: ZodObject<T> | ZodEnum<[string, ...string[]]>
+): string {
+  const name = (schema._def as GraphQLZodTypeDef).graphQLName;
   if (!name) {
     throw new Error('GraphQL name not found');
   }
@@ -196,7 +221,7 @@ function toGraphQLOutputType(
 ): GraphQLOutputType {
   let out: GraphQLOutputType;
   if (type instanceof ZodString) {
-    const isGraphQLID = (type._def as any).isGraphQLID;
+    const isGraphQLID = (type._def as GraphQLZodTypeDef).isGraphQLID;
     out = isGraphQLID ? GraphQLID : GraphQLString;
   } else if (type instanceof ZodArray) {
     const elementType = toGraphQLOutputType(registry, type.element, optional);
@@ -241,7 +266,7 @@ function toGraphQLObjectType(
   for (const [key, value] of Object.entries(schema.shape)) {
     fields[key] = {type: toGraphQLOutputType(registry, value)};
   }
-  const name = (schema._def as any).graphQLName;
+  const name = (schema._def as GraphQLZodTypeDef).graphQLName;
   if (!name) {
     throw new Error('GraphQL name not found');
   }
@@ -259,7 +284,7 @@ function toGraphQLInputObjectType(
   for (const [key, value] of Object.entries(schema.shape)) {
     fields[key] = {type: toGraphQLInputType(registry, value)};
   }
-  const name = (schema._def as any).graphQLName;
+  const name = (schema._def as GraphQLZodTypeDef).graphQLName;
   if (!name) {
     throw new Error('GraphQL name not found');
   }
@@ -276,7 +301,7 @@ function toGraphQLInputType(
 ): GraphQLInputType {
   let out: GraphQLInputType;
   if (type instanceof ZodString) {
-    const isGraphQLID = (type._def as any).isGraphQLID;
+    const isGraphQLID = (type._def as GraphQLZodTypeDef).isGraphQLID;
     out = isGraphQLID ? GraphQLID : GraphQLString;
   } else if (type instanceof ZodArray) {
     const elementType = toGraphQLInputType(registry, type.element, optional);
@@ -302,12 +327,14 @@ function toGraphQLInputType(
   return optional || type.isOptional() ? out : new GraphQLNonNull(out);
 }
 
-function toGraphQLEnumType(schema: ZodEnum<any>): GraphQLEnumType {
+function toGraphQLEnumType<T extends [string, ...string[]]>(
+  schema: ZodEnum<T>
+): GraphQLEnumType {
   const values: ThunkObjMap<GraphQLEnumValueConfig> = {};
-  schema._def.values.forEach((value: any) => {
+  schema._def.values.forEach((value: string) => {
     values[value] = {value};
   });
-  const name = (schema._def as any).graphQLName;
+  const name = (schema._def as GraphQLZodTypeDef).graphQLName;
   if (!name) {
     throw new Error('GraphQL name not found');
   }
@@ -321,11 +348,11 @@ function toGraphQLQueryField(
   registry: Registry,
   schema: ZodObject<ZodRawShape>
 ): ThunkObjMap<GraphQLFieldConfig<unknown, unknown>> {
-  const name = (schema._def as any).graphQLName;
+  const name = (schema._def as GraphQLZodTypeDef).graphQLName;
   if (!name) {
     throw new Error('GraphQL name not found');
   }
-  const outputSchema = (schema._def as any).graphQLOutputSchema;
+  const outputSchema = (schema._def as GraphQLZodTypeDef).graphQLOutputSchema;
   if (!outputSchema) {
     throw new Error('GraphQL output schema not found');
   }
@@ -346,7 +373,7 @@ function updateEntry(registry: Registry, entry: RegistryEntry) {
     if (entry.schema instanceof ZodObject) {
       entry.graphQLType = toGraphQLObjectType(
         registry,
-        entry.schema as ZodObject<any>
+        entry.schema as ZodObject<ZodRawShape>
       );
     } else {
       throw new Error('Expected ZodObject for a GraphQLObjectType');
@@ -355,14 +382,16 @@ function updateEntry(registry: Registry, entry: RegistryEntry) {
     if (entry.schema instanceof ZodObject) {
       entry.graphQLType = toGraphQLInputObjectType(
         registry,
-        entry.schema as ZodObject<any>
+        entry.schema as ZodObject<ZodRawShape>
       );
     } else {
       throw new Error('Expected ZodObject for a GraphQLObjectType');
     }
   } else if (entry.type === 'enum') {
     if (entry.schema instanceof ZodEnum) {
-      entry.graphQLType = toGraphQLEnumType(entry.schema as ZodEnum<any>);
+      entry.graphQLType = toGraphQLEnumType(
+        entry.schema as ZodEnum<[string, ...string[]]>
+      );
     } else {
       throw new Error('Expected ZodEnum for a GraphQLEnumType');
     }
@@ -374,7 +403,7 @@ function updateEntry(registry: Registry, entry: RegistryEntry) {
     }
     entry.graphQLType = toGraphQLQueryField(
       registry,
-      entry.schema as ZodObject<any>
+      entry.schema as ZodObject<ZodRawShape>
     );
   } else if (entry.type === 'mutation') {
     let query = registry.get('Mutation');
@@ -384,22 +413,24 @@ function updateEntry(registry: Registry, entry: RegistryEntry) {
     }
     entry.graphQLType = toGraphQLQueryField(
       registry,
-      entry.schema as ZodObject<any>
+      entry.schema as ZodObject<ZodRawShape>
     );
   } else {
     throw new Error(`Unsupported type ${entry.type}`);
   }
 }
 
-export function graphQLSchema(schemas: ZodSchema[]): GraphQLSchema {
+export function graphQLSchema<
+  T extends ZodObject<ZodRawShape> | ZodEnum<[string, ...string[]]>,
+>(schemas: T[]): GraphQLSchema {
   // Setup the registry
   const registry: Registry = new Map();
   schemas.forEach(schema => {
-    const name = (schema._def as any).graphQLName;
+    const name = (schema._def as GraphQLZodTypeDef).graphQLName;
     if (!name) {
       throw new Error('GraphQL name not found');
     }
-    const type = (schema._def as any).graphQLType;
+    const type = (schema._def as GraphQLZodTypeDef).graphQLType;
     if (!type) {
       throw new Error('GraphQL type not found');
     }
@@ -451,6 +482,8 @@ export function graphQLSchema(schemas: ZodSchema[]): GraphQLSchema {
   });
 }
 
-export function graphQLSchemaString(schemas: ZodSchema[]): string {
+export function graphQLSchemaString<
+  T extends ZodObject<ZodRawShape> | ZodEnum<[string, ...string[]]>,
+>(schemas: T[]): string {
   return printSchema(graphQLSchema(schemas));
 }

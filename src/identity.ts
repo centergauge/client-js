@@ -97,16 +97,3 @@ export const createIdentity = graphQLMutation(
   CreateIdentityMutationVariables,
   CreateIdentityOutput
 );
-
-// export type QueryProps<V> = {
-//   name: string,
-//   variables: V,
-//   projection?: string[],
-// }
-
-// function query<V, O>(props: QueryProps<V>): Promise<O> {
-//
-// }
-
-// query output
-// query<V, O>(queryVariables: V): Promise<O>;
