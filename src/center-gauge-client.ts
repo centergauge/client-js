@@ -5,7 +5,11 @@ import {V6Client} from '@aws-amplify/api-graphql';
 import {ConsoleLogger} from 'aws-amplify/utils';
 import {SafeResult} from './safe-result.js';
 import {CenterGaugeClientError, isCenterGaugeClientError} from './errors.js';
-import {GraphQLQuery, graphQLSchemaString} from './zod-to-graphql.js';
+import {
+  GraphQLMutation,
+  GraphQLQuery,
+  graphQLSchemaString,
+} from './zod-to-graphql.js';
 import {
   CreateIdentityInput,
   CreateIdentityMutationVariables,
@@ -143,97 +147,39 @@ export class CenterGaugeClient {
     }
   }
 
-  async query<O>(query: GraphQLQuery): Promise<O | null> {
+  async query<I, O>(query: GraphQLQuery<I, O>): Promise<O | null> {
     return this.executeGraphQL<O>(async () => {
-      console.log(await this.graphClient.graphql(query));
       const result = (await this.graphClient.graphql(
         query
       )) as GraphQLResult<unknown>;
-      return result.data as O;
+      return (result.data as Record<string, unknown>)[query.name] as O;
     });
   }
 
-  async querySafe<O>(query: GraphQLQuery): Promise<SafeResult<O | null>> {
+  async querySafe<I, O>(
+    query: GraphQLQuery<I, O>
+  ): Promise<SafeResult<O | null>> {
     return this.executeSafeResult(async () => {
-      return this.query<O>(query);
+      return this.query<I, O>(query);
     });
   }
 
-  // async getIdentity(id: string): Promise<Identity> {
-  //   return this.executeGraphQL<Identity>(async () => {
-  //     return (
-  //       await this.graphClient.graphql({
-  //         query: getIdentity,
-  //         variables: {
-  //           id,
-  //         },
-  //       })
-  //     ).data.getIdentity as Identity;
-  //   });
-  // }
-  //
-  // async getIdentitySafe(id: string): Promise<SafeResult<Identity>> {
-  //   return this.executeSafeResult(async () => {
-  //     return this.getIdentity(id);
-  //   });
-  // }
-  //
-  // async createIdentity(input: CreateIdentity): Promise<Identity> {
-  //   return this.executeGraphQL(async () => {
-  //     return (
-  //       await this.graphClient.graphql({
-  //         query: createIdentity,
-  //         variables: {
-  //           input,
-  //         },
-  //       })
-  //     ).data.createIdentity as Identity;
-  //   });
-  // }
-  //
-  // async createIdentitySafe(input: CreateIdentity) {
-  //   return this.executeSafeResult(async () => {
-  //     return this.createIdentity(input);
-  //   });
-  // }
-  //
-  // async updateIdentity(input: UpdateIdentity): Promise<Identity> {
-  //   return this.executeGraphQL(async () => {
-  //     return (
-  //       await this.graphClient.graphql({
-  //         query: updateIdentity,
-  //         variables: {
-  //           input,
-  //         },
-  //       })
-  //     ).data.updateIdentity as Identity;
-  //   });
-  // }
-  //
-  // async updateIdentitySafe(input: UpdateIdentity) {
-  //   return this.executeSafeResult(async () => {
-  //     return this.updateIdentity(input);
-  //   });
-  // }
-  //
-  // async getOrg(id: string): Promise<Org> {
-  //   return this.executeGraphQL(async () => {
-  //     return (
-  //       await this.graphClient.graphql({
-  //         query: getOrg,
-  //         variables: {
-  //           id,
-  //         },
-  //       })
-  //     ).data.getOrg as Org;
-  //   });
-  // }
-  //
-  // async getOrgSafe(id: string): Promise<SafeResult<Org>> {
-  //   return this.executeSafeResult(async () => {
-  //     return this.getOrg(id);
-  //   });
-  // }
+  async mutate<I, O>(mutation: GraphQLMutation<I, O>): Promise<O | null> {
+    return this.executeGraphQL<O>(async () => {
+      const result = (await this.graphClient.graphql(
+        mutation
+      )) as GraphQLResult<unknown>;
+      return (result.data as Record<string, unknown>)[mutation.name] as O;
+    });
+  }
+
+  async mutateSafe<I, O>(
+    mutation: GraphQLMutation<I, O>
+  ): Promise<SafeResult<O | null>> {
+    return this.executeSafeResult(async () => {
+      return this.mutate<I, O>(mutation);
+    });
+  }
 
   static graphQLSchema(): string {
     return graphQLSchemaString([

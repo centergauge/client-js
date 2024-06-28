@@ -64,11 +64,10 @@ export type GetIdentityQueryVariables = z.infer<
   typeof GetIdentityQueryVariables
 >;
 
-export const getIdentity = graphQLQuery(
-  'getIdentity',
+export const getIdentity = graphQLQuery<
   GetIdentityQueryVariables,
-  GetIdentityOutput.optional()
-);
+  GetIdentityOutput
+>('getIdentity', GetIdentityQueryVariables, GetIdentityOutput.optional());
 
 ///////////////////////////////////////////////////////////////////////////////
 // createIdentity()

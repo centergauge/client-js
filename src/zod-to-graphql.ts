@@ -49,12 +49,17 @@ interface RegistryEntry {
 
 type Registry = Map<string, RegistryEntry>;
 
-export type GraphQLQuery = {
-  variables: Record<string | number | symbol, unknown>;
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export type GraphQLQuery<I, O> = {
+  name: string;
+  variables: I;
   query: string;
 };
-export type GraphQLMutation = {
-  variables: Record<string | number | symbol, unknown>;
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export type GraphQLMutation<I, O> = {
+  name: string;
+  variables: I;
   query: string;
 };
 
@@ -148,18 +153,16 @@ function toGraphQLParamsString<T extends ZodRawShape>(
   return queryStr;
 }
 
-export function graphQLQuery<T extends ZodRawShape>(
+export function graphQLQuery<I, O>(
   name: string,
-  queryVariablesSchema: ZodObject<T>,
+  queryVariablesSchema: ZodObject<ZodRawShape>,
   outputSchema: ZodTypeAny
 ) {
   (queryVariablesSchema._def as GraphQLZodTypeDef).graphQLName = name;
   (queryVariablesSchema._def as GraphQLZodTypeDef).graphQLType = 'query';
   (queryVariablesSchema._def as GraphQLZodTypeDef).graphQLOutputSchema =
     outputSchema;
-  return function (
-    variables: z.infer<typeof queryVariablesSchema>
-  ): GraphQLQuery {
+  return function (variables: I): GraphQLQuery<I, O> {
     let queryStr =
       `query ${name}(` +
       toGraphQLParamsString(queryVariablesSchema) +
@@ -170,13 +173,14 @@ export function graphQLQuery<T extends ZodRawShape>(
     queryStr = queryStr.slice(0, -2); // Remove the trailing comma and space
     queryStr += ') ' + toGraphQLBlockString('  ', outputSchema) + '\n}';
     return {
+      name,
       variables,
       query: queryStr,
     };
   };
 }
 
-export function graphQLMutation<T extends ZodRawShape>(
+export function graphQLMutation<I, O, T extends ZodRawShape>(
   name: string,
   mutationVariablesSchema: ZodObject<T>,
   outputSchema: ZodTypeAny
@@ -185,9 +189,7 @@ export function graphQLMutation<T extends ZodRawShape>(
   (mutationVariablesSchema._def as GraphQLZodTypeDef).graphQLType = 'mutation';
   (mutationVariablesSchema._def as GraphQLZodTypeDef).graphQLOutputSchema =
     outputSchema;
-  return function (
-    variables: z.infer<typeof mutationVariablesSchema>
-  ): GraphQLMutation {
+  return function (variables: I): GraphQLMutation<I, O> {
     let queryStr =
       `mutation ${name}(` +
       toGraphQLParamsString(mutationVariablesSchema) +
@@ -198,6 +200,7 @@ export function graphQLMutation<T extends ZodRawShape>(
     queryStr = queryStr.slice(0, -2); // Remove the trailing comma and space
     queryStr += ') ' + toGraphQLBlockString('  ', outputSchema) + '\n}';
     return {
+      name,
       variables,
       query: queryStr,
     };
