@@ -1,6 +1,11 @@
 // eslint-disable-next-line n/no-unpublished-import
 import {expect, test} from 'vitest';
-import {createIdentity} from './create-identity.js';
+import {
+  createIdentity,
+  CreateIdentityInput,
+  CreateIdentityInputSchema,
+} from './create-identity.js';
+import * as v from 'valibot';
 
 test('Test createIdentity', () => {
   const query = createIdentity({
@@ -28,4 +33,15 @@ test('Test createIdentity', () => {
       '  }\n' +
       '}'
   );
+});
+
+test('Test Validation', () => {
+  const input: CreateIdentityInput = {
+    id: 'not a uuid',
+    givenName: 'test',
+    familyName: 'test',
+    email: 'not an email',
+  };
+  const parseResult = v.safeParse(CreateIdentityInputSchema, input);
+  expect(parseResult.success).toBe(false);
 });
