@@ -17,7 +17,8 @@
   ],
   "scripts": {
     "build": "tsc",
-    "prebuild": "prettier --check . && gts lint && cp package.json dist",
+    "prebuild": "prettier --check . && gts lint",
+    "postbuild": "cp package.json dist/",
     "watch": "tsc -w",
     "test": "vitest run --coverage",
     "lint": "gts lint",
@@ -44,8 +45,8 @@
     "axios": "^1.7.2",
     "cookie": "^0.6.0",
     "graphql": "^16.9.0",
-    "yaml": "^2.4.5",
-    "zod": "^3.23.8"
+    "valibot": "^0.35.0",
+    "yaml": "^2.4.5"
   },
   "peerDependencies": {
     "@authsure/flow-client": "^0.0.4",
@@ -58,6 +59,10 @@
     ".": {
       "import": "./index.js",
       "types": "./index.d.ts"
+    },
+    "./types": {
+      "import": "./types/index.d.ts",
+      "types": "./types/index.d.ts"
     }
   }
 }

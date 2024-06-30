@@ -6,21 +6,20 @@ import {ConsoleLogger} from 'aws-amplify/utils';
 import {SafeResult} from './safe-result.js';
 import {CenterGaugeClientError, isCenterGaugeClientError} from './errors.js';
 import {
-  GraphQLMutation,
-  GraphQLQuery,
-  graphQLSchemaString,
-} from './zod-to-graphql.js';
+  getIdentity,
+  GetIdentityOutputSchema,
+  IdentitySchema,
+  Mutation,
+  OrgAssignmentSchema,
+  OrgSchema,
+  Query,
+  toGraphQLSchemaString,
+} from './types/index.js';
 import {
-  CreateIdentityInput,
-  CreateIdentityMutationVariables,
-  CreateIdentityOutput,
-  GetIdentityOutput,
-  GetIdentityQueryVariables,
-  Identity,
-  IdentityOrgAssignment,
-  OrgAssignment,
-  OrgRole,
-} from './identity.js';
+  createIdentity,
+  CreateIdentityInputSchema,
+  CreateIdentityOutputSchema,
+} from './types/identity/create-identity.js';
 
 export interface ClientCredentialsConfig {
   readonly clientId: string | Promise<string>;
@@ -147,7 +146,7 @@ export class CenterGaugeClient {
     }
   }
 
-  async query<I, O>(query: GraphQLQuery<I, O>): Promise<O | null> {
+  async query<I, O>(query: Query<I, O>): Promise<O | null> {
     return this.executeGraphQL<O>(async () => {
       const result = (await this.graphClient.graphql(
         query
@@ -156,15 +155,13 @@ export class CenterGaugeClient {
     });
   }
 
-  async querySafe<I, O>(
-    query: GraphQLQuery<I, O>
-  ): Promise<SafeResult<O | null>> {
+  async safeQuery<I, O>(query: Query<I, O>): Promise<SafeResult<O | null>> {
     return this.executeSafeResult(async () => {
       return this.query<I, O>(query);
     });
   }
 
-  async mutate<I, O>(mutation: GraphQLMutation<I, O>): Promise<O | null> {
+  async mutate<I, O>(mutation: Mutation<I, O>): Promise<O | null> {
     return this.executeGraphQL<O>(async () => {
       const result = (await this.graphClient.graphql(
         mutation
@@ -173,8 +170,8 @@ export class CenterGaugeClient {
     });
   }
 
-  async mutateSafe<I, O>(
-    mutation: GraphQLMutation<I, O>
+  async safeMutate<I, O>(
+    mutation: Mutation<I, O>
   ): Promise<SafeResult<O | null>> {
     return this.executeSafeResult(async () => {
       return this.mutate<I, O>(mutation);
@@ -182,16 +179,17 @@ export class CenterGaugeClient {
   }
 
   static graphQLSchema(): string {
-    return graphQLSchemaString([
-      OrgRole,
-      OrgAssignment,
-      IdentityOrgAssignment,
-      Identity,
-      GetIdentityQueryVariables,
-      GetIdentityOutput,
-      CreateIdentityInput,
-      CreateIdentityOutput,
-      CreateIdentityMutationVariables,
-    ]);
+    return toGraphQLSchemaString({
+      types: [
+        OrgSchema,
+        OrgAssignmentSchema,
+        IdentitySchema,
+        GetIdentityOutputSchema,
+        CreateIdentityOutputSchema,
+      ],
+      inputs: [CreateIdentityInputSchema],
+      queries: [getIdentity],
+      mutations: [createIdentity],
+    });
   }
 }

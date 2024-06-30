@@ -1,6 +1,6 @@
 // eslint-disable-next-line n/no-unpublished-import
 import {expect, test} from 'vitest';
-import {createIdentity, getIdentity} from './identity.js';
+import {createIdentity, CreateIdentityInput, getIdentity} from './identity.js';
 
 test('Test getIdentity', () => {
   const query = getIdentity({id: 'test'});
@@ -35,7 +35,12 @@ test('Test createIdentity', () => {
     },
   });
   expect(query.variables).toEqual({
-    input: {givenName: 'test', familyName: 'test', email: 'test@example.com'},
+    input: {
+      id: 'test',
+      givenName: 'test',
+      familyName: 'test',
+      email: 'test@example.com',
+    },
   });
   expect(query.query).toEqual(
     'mutation createIdentity($input: CreateIdentityInput!) {\n' +
@@ -50,4 +55,15 @@ test('Test createIdentity', () => {
       '  }\n' +
       '}'
   );
+});
+
+test('Test Validation', () => {
+  const input: CreateIdentityInput = {
+    id: 'not a uuid',
+    givenName: 'test',
+    familyName: 'test',
+    email: 'not an email',
+  };
+  const parseResult = CreateIdentityInput.safeParse(input);
+  expect(parseResult.success).toBe(false);
 });

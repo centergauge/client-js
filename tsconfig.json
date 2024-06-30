@@ -12,6 +12,8 @@
     "declarationMap": true,
     "inlineSources": true,
     "types": ["node"],
+    "strict": true,
+    "skipLibCheck": true,
     "lib": ["ES2020", "dom"]
   },
   "include": ["src"],
