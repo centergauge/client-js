@@ -14,12 +14,10 @@ import {
   OrgSchema,
   Query,
   toGraphQLSchemaString,
-} from './types/index.mjs';
-import {
   createIdentity,
   CreateIdentityInputSchema,
   CreateIdentityOutputSchema,
-} from './types/identity/create-identity.mjs';
+} from './types/index.mjs';
 
 export interface ClientCredentialsConfig {
   readonly clientId: string | Promise<string>;
