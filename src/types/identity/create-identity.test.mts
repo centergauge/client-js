@@ -4,7 +4,7 @@ import {
   createIdentity,
   CreateIdentityInput,
   CreateIdentityInputSchema,
-} from './create-identity.js';
+} from './create-identity.mjs';
 import * as v from 'valibot';
 
 test('Test createIdentity', () => {

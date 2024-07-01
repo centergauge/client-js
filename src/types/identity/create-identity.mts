@@ -1,6 +1,6 @@
 import * as v from 'valibot';
-import * as vg from '../valibot-to-graphql.js';
-import {IdentitySchema} from './identity.js';
+import * as vg from '../valibot-to-graphql.mjs';
+import {IdentitySchema} from './identity.mjs';
 
 export const CreateIdentityInputSchema = vg.input('CreateIdentityInput', {
   ...IdentitySchema.entries,

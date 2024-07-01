@@ -1,5 +1,5 @@
 import * as v from 'valibot';
-import * as vg from '../valibot-to-graphql.js';
+import * as vg from '../valibot-to-graphql.mjs';
 
 export const OrgIdSchema = v.pipe(vg.id(), v.uuid());
 

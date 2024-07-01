@@ -57,12 +57,12 @@
   },
   "exports": {
     ".": {
-      "import": "./index.js",
-      "types": "./index.d.ts"
+      "import": "./index.mjs",
+      "types": "./index.d.mts"
     },
     "./types": {
-      "import": "./types/index.d.ts",
-      "types": "./types/index.d.ts"
+      "import": "./types/index.d.mts",
+      "types": "./types/index.d.mts"
     }
   }
 }

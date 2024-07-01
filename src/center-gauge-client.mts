@@ -3,8 +3,8 @@ import {Amplify} from 'aws-amplify';
 import {generateClient, GraphQLResult} from 'aws-amplify/api';
 import {V6Client} from '@aws-amplify/api-graphql';
 import {ConsoleLogger} from 'aws-amplify/utils';
-import {SafeResult} from './safe-result.js';
-import {CenterGaugeClientError, isCenterGaugeClientError} from './errors.js';
+import {SafeResult} from './safe-result.mjs';
+import {CenterGaugeClientError, isCenterGaugeClientError} from './errors.mjs';
 import {
   getIdentity,
   GetIdentityOutputSchema,
@@ -14,12 +14,12 @@ import {
   OrgSchema,
   Query,
   toGraphQLSchemaString,
-} from './types/index.js';
+} from './types/index.mjs';
 import {
   createIdentity,
   CreateIdentityInputSchema,
   CreateIdentityOutputSchema,
-} from './types/identity/create-identity.js';
+} from './types/identity/create-identity.mjs';
 
 export interface ClientCredentialsConfig {
   readonly clientId: string | Promise<string>;

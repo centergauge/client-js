@@ -1,6 +1,6 @@
 // eslint-disable-next-line n/no-unpublished-import
 import {expect, test} from 'vitest';
-import * as vg from './valibot-to-graphql.js';
+import * as vg from './valibot-to-graphql.mjs';
 import * as v from 'valibot';
 
 test('Test isIDSchema', () => {

@@ -1,6 +1,6 @@
 // eslint-disable-next-line n/no-unpublished-import
 import {expect, test} from 'vitest';
-import {getIdentity} from './get-identity.js';
+import {getIdentity} from './get-identity.mjs';
 
 test('Test getIdentity', () => {
   const query = getIdentity({id: 'test'});
