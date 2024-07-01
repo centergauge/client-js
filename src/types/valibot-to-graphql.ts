@@ -432,7 +432,7 @@ export function query<I, O>(
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export type Mutation<I, O> = {
   name: string;
-  variables: I;
+  variables: I | {input: I};
   query: string;
 };
 
@@ -472,7 +472,7 @@ export function mutation<I, O>(
     query += ') ' + toGraphQLBlockString('  ', outputSchema) + '\n}';
     return {
       name,
-      variables,
+      variables: isInputSchema(argsSchema) ? {input: variables} : variables,
       query,
     };
   };
