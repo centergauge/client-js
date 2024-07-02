@@ -18,6 +18,10 @@ import {
   CreateIdentityInputSchema,
   CreateIdentityOutputSchema,
 } from './types/index.mjs';
+import {
+  CreateOrgInputSchema,
+  CreateOrgOutputSchema,
+} from './types/org/create-org.mjs';
 
 export interface ClientCredentialsConfig {
   readonly clientId: string | Promise<string>;
@@ -184,8 +188,9 @@ export class CenterGaugeClient {
         IdentitySchema,
         GetIdentityOutputSchema,
         CreateIdentityOutputSchema,
+        CreateOrgOutputSchema,
       ],
-      inputs: [CreateIdentityInputSchema],
+      inputs: [CreateIdentityInputSchema, CreateOrgInputSchema],
       queries: [getIdentity],
       mutations: [createIdentity],
     });
