@@ -13,6 +13,7 @@ export const OrgAssignmentSchema = vg.type('OrgAssignment', {
 export type OrgAssignment = v.InferOutput<typeof OrgAssignmentSchema>;
 
 export const GetIdentityArgs = v.object({id: IdentityIdSchema});
+export type GetIdentityArgs = v.InferInput<typeof GetIdentityArgs>;
 
 export const GetIdentityOutputSchema = vg.type('GetIdentityOutput', {
   ...IdentitySchema.entries,
@@ -21,7 +22,7 @@ export const GetIdentityOutputSchema = vg.type('GetIdentityOutput', {
 
 export type GetIdentityOutput = v.InferOutput<typeof GetIdentityOutputSchema>;
 
-export const getIdentity = vg.query(
+export const getIdentity = vg.query<GetIdentityArgs, GetIdentityOutput>(
   'getIdentity',
   GetIdentityArgs,
   v.optional(GetIdentityOutputSchema)
