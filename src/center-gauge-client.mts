@@ -17,6 +17,9 @@ import {
   createIdentity,
   CreateIdentityInputSchema,
   CreateIdentityOutputSchema,
+  updateIdentity,
+  UpdateIdentityOutputSchema,
+  UpdateIdentityInputSchema,
 } from './types/index.mjs';
 import {
   CreateOrgInputSchema,
@@ -189,10 +192,15 @@ export class CenterGaugeClient {
         GetIdentityOutputSchema,
         CreateIdentityOutputSchema,
         CreateOrgOutputSchema,
+        UpdateIdentityOutputSchema,
       ],
-      inputs: [CreateIdentityInputSchema, CreateOrgInputSchema],
+      inputs: [
+        CreateIdentityInputSchema,
+        CreateOrgInputSchema,
+        UpdateIdentityInputSchema,
+      ],
       queries: [getIdentity],
-      mutations: [createIdentity],
+      mutations: [createIdentity, updateIdentity],
     });
   }
 }
