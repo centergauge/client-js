@@ -31,6 +31,12 @@ import {
   CreateOrgInputSchema,
   CreateOrgOutputSchema,
 } from './types/org/create-org.mjs';
+import {IdentityAutoMappingSchema} from './types/identity-auto-mapping/index.mjs';
+import {
+  createIdentityAutoMapping,
+  CreateIdentityAutoMappingInputSchema,
+  CreateIdentityAutoMappingOutputSchema,
+} from './types/identity-auto-mapping/create-identity-auto-mapping.mjs';
 
 export interface ClientCredentialsConfig {
   readonly clientId: string | Promise<string>;
@@ -202,15 +208,27 @@ export class CenterGaugeClient {
         GetIdentityOutputSchema,
         CreateIdentityOutputSchema,
         UpdateIdentityOutputSchema,
+
+        IdentityAutoMappingSchema,
+        CreateIdentityAutoMappingOutputSchema,
       ],
       inputs: [
         CreateOrgInputSchema,
         UpdateOrgInputSchema,
+
         CreateIdentityInputSchema,
         UpdateIdentityInputSchema,
+
+        CreateIdentityAutoMappingInputSchema,
       ],
       queries: [getOrg, getIdentity],
-      mutations: [createOrg, updateOrg, createIdentity, updateIdentity],
+      mutations: [
+        createOrg,
+        updateOrg,
+        createIdentity,
+        updateIdentity,
+        createIdentityAutoMapping,
+      ],
     });
   }
 }
