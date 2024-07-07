@@ -3,7 +3,7 @@ import * as vg from '../valibot-to-graphql.mjs';
 import {OrgIdSchema} from '../org/org.mjs';
 import {IdentityIdSchema, IdentitySchema} from './identity.mjs';
 
-const OrgRoleSchema = v.picklist(['OWNER', 'ADMIN', 'MEMBER']);
+export const OrgRoleSchema = v.picklist(['OWNER', 'ADMIN', 'MEMBER']);
 
 export const OrgAssignmentSchema = vg.type('OrgAssignment', {
   orgId: OrgIdSchema,

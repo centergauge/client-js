@@ -24,6 +24,8 @@ import {
   UpdateOrgInputSchema,
   createOrg,
   updateOrg,
+  GetOrgOutputSchema,
+  getOrg,
 } from './types/index.mjs';
 import {
   CreateOrgInputSchema,
@@ -192,6 +194,7 @@ export class CenterGaugeClient {
       types: [
         OrgSchema,
         OrgAssignmentSchema,
+        GetOrgOutputSchema,
         CreateOrgOutputSchema,
         UpdateOrgOutputSchema,
 
@@ -206,7 +209,7 @@ export class CenterGaugeClient {
         CreateIdentityInputSchema,
         UpdateIdentityInputSchema,
       ],
-      queries: [getIdentity],
+      queries: [getOrg, getIdentity],
       mutations: [createOrg, updateOrg, createIdentity, updateIdentity],
     });
   }
