@@ -9,7 +9,6 @@ export const GetOrgOutputSchema = vg.type('GetOrgOutput', {
   ...OrgSchema.entries,
   identityAutoMappings: v.array(v.string()),
 });
-
 export type GetOrgOutput = v.InferOutput<typeof GetOrgOutputSchema>;
 
 export const getOrg = vg.query<GetOrgArgs, GetOrgOutput>(

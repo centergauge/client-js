@@ -11,7 +11,7 @@ export const IdentitySchema = vg.type('Identity', {
   familyName: v.pipe(v.string(), v.maxLength(60)),
   email: v.pipe(v.string(), v.email()),
   profilePicture: v.optional(v.pipe(v.string(), v.url())),
-  roles: v.optional(v.array(RoleSchema)),
+  roles: v.array(RoleSchema),
 });
 
 export type Identity = v.InferOutput<typeof IdentitySchema>;

@@ -13,6 +13,7 @@ test('Test createIdentity', () => {
     givenName: 'test',
     familyName: 'test',
     email: 'test@example.com',
+    roles: [],
   });
   expect(query.variables).toEqual({
     input: {
@@ -20,6 +21,7 @@ test('Test createIdentity', () => {
       givenName: 'test',
       familyName: 'test',
       email: 'test@example.com',
+      roles: [],
     },
   });
   expect(query.query).toEqual(
@@ -43,6 +45,7 @@ test('Test Validation', () => {
     givenName: 'test',
     familyName: 'test',
     email: 'not an email',
+    roles: [],
   };
   const parseResult = v.safeParse(CreateIdentityInputSchema, input);
   expect(parseResult.success).toBe(false);
