@@ -4,6 +4,7 @@ import {OrgIdSchema} from '../org/org.mjs';
 import {IdentityIdSchema, IdentitySchema} from './identity.mjs';
 
 export const OrgRoleSchema = v.picklist(['OWNER', 'ADMIN', 'MEMBER']);
+export type OrgRole = v.InferOutput<typeof OrgRoleSchema>;
 
 export const OrgAssignmentSchema = vg.type('OrgAssignment', {
   orgId: OrgIdSchema,
@@ -12,8 +13,8 @@ export const OrgAssignmentSchema = vg.type('OrgAssignment', {
 
 export type OrgAssignment = v.InferOutput<typeof OrgAssignmentSchema>;
 
-export const GetIdentityArgs = v.object({id: IdentityIdSchema});
-export type GetIdentityArgs = v.InferInput<typeof GetIdentityArgs>;
+export const GetIdentityArgsSchema = v.object({id: IdentityIdSchema});
+export type GetIdentityArgs = v.InferInput<typeof GetIdentityArgsSchema>;
 
 export const GetIdentityOutputSchema = vg.type('GetIdentityOutput', {
   ...IdentitySchema.entries,
@@ -24,6 +25,14 @@ export type GetIdentityOutput = v.InferOutput<typeof GetIdentityOutputSchema>;
 
 export const getIdentity = vg.query<GetIdentityArgs, GetIdentityOutput>(
   'getIdentity',
-  GetIdentityArgs,
+  GetIdentityArgsSchema,
   v.optional(GetIdentityOutputSchema)
 );
+
+export function getOrgRoles(
+  identity: GetIdentityOutput,
+  orgId: string
+): OrgRole[] | undefined {
+  const orgAssignment = identity.assignments.find(a => a.orgId === orgId);
+  return orgAssignment ? orgAssignment.roles : undefined;
+}
