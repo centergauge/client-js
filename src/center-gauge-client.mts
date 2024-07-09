@@ -40,6 +40,7 @@ import {
   FindIdentityAutoMappingsByDomainOutputSchema,
   findOrgBySlug,
   FindOrgBySlugOutputSchema,
+  ExternalIdentifierSchema,
 } from './types/index.mjs';
 
 export interface ClientCredentialsConfig {
@@ -208,6 +209,8 @@ export class CenterGaugeClient {
         CreateOrgOutputSchema,
         UpdateOrgOutputSchema,
         FindOrgBySlugOutputSchema,
+
+        ExternalIdentifierSchema,
 
         IdentitySchema,
         GetIdentityOutputSchema,

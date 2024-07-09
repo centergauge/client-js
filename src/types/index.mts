@@ -1,3 +1,4 @@
+export * from './external-identifier/index.mjs';
 export * from './identity/index.mjs';
 export * from './identity-auto-mapping/index.mjs';
 export * from './identity-org-assignment/index.mjs';
