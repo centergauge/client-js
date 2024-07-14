@@ -26,13 +26,13 @@ export type GetIdentityOutput = v.InferOutput<typeof GetIdentityOutputSchema>;
 export const getIdentity = vg.query<GetIdentityArgs, GetIdentityOutput>(
   'getIdentity',
   GetIdentityArgsSchema,
-  v.optional(GetIdentityOutputSchema)
+  v.optional(GetIdentityOutputSchema),
 );
 
 export function getOrgRoles(
   identity: GetIdentityOutput,
-  orgId: string
+  orgId: string,
 ): OrgRole[] | undefined {
-  const orgAssignment = identity.assignments.find(a => a.orgId === orgId);
+  const orgAssignment = identity.assignments.find((a) => a.orgId === orgId);
   return orgAssignment ? orgAssignment.roles : undefined;
 }

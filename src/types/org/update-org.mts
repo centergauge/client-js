@@ -16,5 +16,5 @@ export type UpdateOrgOutput = v.InferOutput<typeof UpdateOrgOutputSchema>;
 export const updateOrg = vg.mutation<UpdateOrgInput, UpdateOrgOutput>(
   'updateOrg',
   UpdateOrgInputSchema,
-  UpdateOrgOutputSchema
+  UpdateOrgOutputSchema,
 );

@@ -1,4 +1,3 @@
-// eslint-disable-next-line n/no-unpublished-import
 import {expect, test} from 'vitest';
 import {
   createIdentity,
@@ -35,7 +34,7 @@ test('Test createIdentity', () => {
       '    roles\n' +
       '    __typename\n' +
       '  }\n' +
-      '}'
+      '}',
   );
 });
 

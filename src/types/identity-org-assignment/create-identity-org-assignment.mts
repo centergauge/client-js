@@ -1,15 +1,12 @@
 import * as v from 'valibot';
 import * as vg from '../valibot-to-graphql.mjs';
-import {
-  IdentityOrgAssignment,
-  IdentityOrgAssignmentSchema,
-} from './identity-org-assignment.mjs';
+import {IdentityOrgAssignmentSchema} from './identity-org-assignment.mjs';
 
 export const CreateIdentityOrgAssignmentInputSchema = vg.input(
   'CreateIdentityOrgAssignment',
   {
     ...IdentityOrgAssignmentSchema.entries,
-  }
+  },
 );
 export type CreateIdentityOrgAssignmentInput = v.InferInput<
   typeof CreateIdentityOrgAssignmentInputSchema
@@ -19,7 +16,7 @@ export const CreateIdentityOrgAssignmentOutputSchema = vg.type(
   'CreateIdentityOrgAssignmentOutput',
   {
     ...IdentityOrgAssignmentSchema.entries,
-  }
+  },
 );
 
 export type CreateIdentityOrgAssignmentOutput = v.InferOutput<
@@ -32,5 +29,5 @@ export const createIdentityOrgAssignment = vg.mutation<
 >(
   'createIdentityOrgAssignment',
   CreateIdentityOrgAssignmentInputSchema,
-  CreateIdentityOrgAssignmentOutputSchema
+  CreateIdentityOrgAssignmentOutputSchema,
 );

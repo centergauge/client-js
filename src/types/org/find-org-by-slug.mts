@@ -15,5 +15,5 @@ export type FindOrgBySlugOutput = v.InferOutput<
 export const findOrgBySlug = vg.query<FindOrgBySlugArgs, FindOrgBySlugOutput>(
   'findOrgBySlug',
   FindOrgBySlugArgs,
-  v.optional(FindOrgBySlugOutputSchema)
+  v.optional(FindOrgBySlugOutputSchema),
 );

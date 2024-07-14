@@ -1,4 +1,3 @@
-// eslint-disable-next-line n/no-unpublished-import
 import {expect, test} from 'vitest';
 import {getIdentity} from './get-identity.mjs';
 
@@ -22,6 +21,6 @@ test('Test getIdentity', () => {
       '    }\n' +
       '    __typename\n' +
       '  }\n' +
-      '}'
+      '}',
   );
 });

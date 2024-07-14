@@ -6,7 +6,7 @@ export const CreateIdentityAutoMappingInputSchema = vg.input(
   'CreateIdentityAutoMapping',
   {
     ...IdentityAutoMappingSchema.entries,
-  }
+  },
 );
 export type CreateIdentityAutoMappingInput = v.InferInput<
   typeof CreateIdentityAutoMappingInputSchema
@@ -16,7 +16,7 @@ export const CreateIdentityAutoMappingOutputSchema = vg.type(
   'CreateIdentityAutoMappingOutput',
   {
     ...IdentityAutoMappingSchema.entries,
-  }
+  },
 );
 export type CreateIdentityAutoMappingOutput = v.InferOutput<
   typeof CreateIdentityAutoMappingOutputSchema
@@ -28,5 +28,5 @@ export const createIdentityAutoMapping = vg.mutation<
 >(
   'createIdentityAutoMapping',
   CreateIdentityAutoMappingInputSchema,
-  CreateIdentityAutoMappingOutputSchema
+  CreateIdentityAutoMappingOutputSchema,
 );

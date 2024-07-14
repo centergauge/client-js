@@ -43,6 +43,15 @@ import {
   ExternalIdentifierSchema,
   FindExternalIdentifiersByOrgOutputSchema,
   findExternalIdentifiersByOrg,
+  createAlert,
+  CreateAlertInputSchema,
+  AlertSchema,
+  ResourceSchema,
+  StringPropertySchema,
+  BooleanPropertySchema,
+  FloatPropertySchema,
+  IntegerPropertySchema,
+  PropertySchema,
 } from './types/index.mjs';
 
 export interface ClientCredentialsConfig {
@@ -103,7 +112,7 @@ export class CenterGaugeClient {
               if (!token.success) {
                 throw new CenterGaugeClientError(
                   'Failed to get token',
-                  token.error
+                  token.error,
                 );
               }
               return {
@@ -112,7 +121,7 @@ export class CenterGaugeClient {
             },
           },
         },
-      }
+      },
     );
     this.graphClient = generateClient();
   }
@@ -127,9 +136,9 @@ export class CenterGaugeClient {
             e.errors.length === 1
               ? e.errors[0].message
               : 'Multiple errors: [' +
-                e.errors.map(err => err.message).join(', ') +
+                e.errors.map((err) => err.message).join(', ') +
                 ']',
-            e
+            e,
           );
         }
       }
@@ -156,7 +165,7 @@ export class CenterGaugeClient {
   }
 
   protected async executeSafeResult<T>(
-    fn: () => Promise<T>
+    fn: () => Promise<T>,
   ): Promise<SafeResult<T>> {
     try {
       const result = await fn();
@@ -173,7 +182,7 @@ export class CenterGaugeClient {
   async query<I, O>(query: Query<I, O>): Promise<O | null> {
     return this.executeGraphQL<O>(async () => {
       const result = (await this.graphClient.graphql(
-        query
+        query,
       )) as GraphQLResult<unknown>;
       return (result.data as Record<string, unknown>)[query.name] as O;
     });
@@ -188,14 +197,14 @@ export class CenterGaugeClient {
   async mutate<I, O>(mutation: Mutation<I, O>): Promise<O | null> {
     return this.executeGraphQL<O>(async () => {
       const result = (await this.graphClient.graphql(
-        mutation
+        mutation,
       )) as GraphQLResult<unknown>;
       return (result.data as Record<string, unknown>)[mutation.name] as O;
     });
   }
 
   async safeMutate<I, O>(
-    mutation: Mutation<I, O>
+    mutation: Mutation<I, O>,
   ): Promise<SafeResult<O | null>> {
     return this.executeSafeResult(async () => {
       return this.mutate<I, O>(mutation);
@@ -205,6 +214,11 @@ export class CenterGaugeClient {
   static graphQLSchema(): string {
     return toGraphQLSchemaString({
       types: [
+        BooleanPropertySchema,
+        StringPropertySchema,
+        FloatPropertySchema,
+        IntegerPropertySchema,
+
         OrgSchema,
         OrgAssignmentSchema,
         GetOrgOutputSchema,
@@ -226,6 +240,10 @@ export class CenterGaugeClient {
         IdentityAutoMappingSchema,
         CreateIdentityAutoMappingOutputSchema,
         FindIdentityAutoMappingsByDomainOutputSchema,
+
+        ResourceSchema,
+
+        AlertSchema,
       ],
       inputs: [
         CreateOrgInputSchema,
@@ -237,7 +255,10 @@ export class CenterGaugeClient {
         CreateIdentityOrgAssignmentInputSchema,
 
         CreateIdentityAutoMappingInputSchema,
+
+        CreateAlertInputSchema,
       ],
+      unions: [PropertySchema],
       queries: [
         getOrg,
         findOrgBySlug,
@@ -252,6 +273,7 @@ export class CenterGaugeClient {
         updateIdentity,
         createIdentityOrgAssignment,
         createIdentityAutoMapping,
+        createAlert,
       ],
     });
   }

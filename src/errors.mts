@@ -6,7 +6,7 @@ export class CenterGaugeClientError extends Error {
   readonly message: string;
   constructor(
     message: string,
-    public readonly cause?: unknown
+    public readonly cause?: unknown,
   ) {
     super(message);
     this.message = message;
@@ -19,7 +19,7 @@ export class CenterGaugeClientError extends Error {
  * @param e the error to check
  */
 export function isCenterGaugeClientError(
-  e?: unknown
+  e?: unknown,
 ): e is CenterGaugeClientError {
   return e instanceof Error && e.name === 'CenterGaugeClientError';
 }

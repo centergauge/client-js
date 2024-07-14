@@ -16,6 +16,7 @@ import {
   ThunkObjMap,
   printSchema,
   GraphQLFieldConfigArgumentMap,
+  GraphQLUnionType,
 } from 'graphql';
 import {
   ErrorMessage,
@@ -32,6 +33,12 @@ import {
   ArraySchema,
   Default,
   ArrayIssue,
+  NumberSchema,
+  NumberIssue,
+  UnionOptions,
+  UnionIssue,
+  InferIssue,
+  UnionSchema,
 } from 'valibot';
 import * as v from 'valibot';
 
@@ -66,11 +73,40 @@ export function isIDSchema<
 }
 
 export function id(
-  message?: ErrorMessage<StringIssue>
+  message?: ErrorMessage<StringIssue>,
 ): IDSchema<ErrorMessage<StringIssue> | undefined> {
   return {
     ...string(message),
     gtype: 'ID',
+  };
+}
+
+export interface FloatSchema<
+  TMessage extends ErrorMessage<NumberIssue> | undefined,
+> extends NumberSchema<TMessage> {
+  readonly gtype: 'Float';
+}
+
+export function isFloatSchema<
+  TMessage extends ErrorMessage<NumberIssue> | undefined,
+>(value: unknown): value is FloatSchema<TMessage> {
+  if (typeof value !== 'object' || value === null) return false;
+  if (!('gtype' in value) || !('kind' in value) || !('type' in value))
+    return false;
+  const float = value as FloatSchema<TMessage>;
+  return (
+    float.gtype === 'Float' &&
+    float.kind === 'schema' &&
+    float.type === 'number'
+  );
+}
+
+export function float(
+  message?: ErrorMessage<NumberIssue>,
+): FloatSchema<ErrorMessage<NumberIssue> | undefined> {
+  return {
+    ...v.number(message),
+    gtype: 'Float',
   };
 }
 
@@ -84,7 +120,7 @@ export interface TypeSchema<
 
 export function type<TEntries extends ObjectEntries>(
   name: string,
-  entries: TEntries
+  entries: TEntries,
 ): TypeSchema<TEntries, undefined> {
   return {
     ...object(entries),
@@ -116,7 +152,7 @@ export interface InputSchema<
 
 export function input<TEntries extends ObjectEntries>(
   name: string,
-  entries: TEntries
+  entries: TEntries,
 ): InputSchema<TEntries, undefined> {
   return {
     ...object(entries),
@@ -140,9 +176,48 @@ export function isInputSchema<
   );
 }
 
+export interface UnionTypeSchema<
+  TOptions extends UnionOptions,
+  TMessage extends
+    | ErrorMessage<UnionIssue<InferIssue<TOptions[number]>>>
+    | undefined,
+> extends UnionSchema<TOptions, TMessage> {
+  readonly gtype: 'Union';
+  readonly name: string;
+}
+
+export function union<TOptions extends UnionOptions>(
+  name: string,
+  options: TOptions,
+): UnionTypeSchema<TOptions, undefined> {
+  return {
+    ...v.union(options),
+    gtype: 'Union',
+    name,
+  };
+}
+
+export function isUnionTypeSchema<
+  TOptions extends UnionOptions,
+  TMessage extends
+    | ErrorMessage<UnionIssue<InferIssue<TOptions[number]>>>
+    | undefined,
+>(value: unknown): value is UnionTypeSchema<TOptions, TMessage> {
+  if (typeof value !== 'object' || value === null) return false;
+  if (!('gtype' in value) || !('kind' in value) || !('type' in value))
+    return false;
+  const union = value as UnionTypeSchema<TOptions, TMessage>;
+  return (
+    union.gtype === 'Union' && union.kind === 'schema' && union.type === 'union'
+  );
+}
+
 interface Registry {
   types: {
     [key: string]: GraphQLObjectType;
+  };
+  unions: {
+    [key: string]: GraphQLUnionType;
   };
   inputs: {
     [key: string]: GraphQLInputObjectType;
@@ -150,7 +225,7 @@ interface Registry {
 }
 
 function toScalarType(
-  schema: BaseSchema<unknown, unknown, BaseIssue<unknown>>
+  schema: BaseSchema<unknown, unknown, BaseIssue<unknown>>,
 ):
   | typeof GraphQLID
   | typeof GraphQLString
@@ -165,6 +240,8 @@ function toScalarType(
       return GraphQLString;
     case 'boolean':
       return GraphQLBoolean;
+    case 'number':
+      return isFloatSchema(schema) ? GraphQLFloat : GraphQLInt;
     case 'picklist':
       return GraphQLString;
     default:
@@ -175,7 +252,7 @@ function toScalarType(
 function toType(
   registry: Registry,
   schema: BaseSchema<unknown, unknown, BaseIssue<unknown>>,
-  optional = false
+  optional = false,
 ): GraphQLOutputType {
   let type: GraphQLOutputType | undefined = undefined;
   switch (schema.type) {
@@ -183,13 +260,16 @@ function toType(
       if (isTypeSchema(schema)) {
         type = registry.types[schema.name];
         type = type ? type : toGraphQLObjectType(registry, schema);
+      } else if (isUnionTypeSchema(schema)) {
+        type = registry.unions[schema.name];
+        type = type ? type : toGraphQLUnionType(registry, schema);
       } else if (isInputSchema(schema)) {
         throw new Error(
-          `${schema.name} is an input and not allowed in output types in GraphQL`
+          `${schema.name} is an input and not allowed in output types in GraphQL`,
         );
       } else {
         throw new Error(
-          'Object is not an input or type. Nested objects not supported.'
+          'Object is not an input or type. Nested objects not supported.',
         );
       }
       break;
@@ -198,13 +278,20 @@ function toType(
       type = toType(
         registry,
         (schema as OptionalSchema<never, never>).wrapped,
-        optional
+        optional,
       );
       break;
     case 'array':
       type = new GraphQLList(
-        toType(registry, (schema as ArraySchema<never, never>).item)
+        toType(registry, (schema as ArraySchema<never, never>).item),
       );
+      break;
+    case 'union':
+      if (isUnionTypeSchema(schema)) {
+        type = registry.unions[schema.name];
+      } else {
+        throw new Error('Object is not a union type.');
+      }
       break;
     default:
       type = toScalarType(schema);
@@ -217,8 +304,11 @@ export function toGraphQLObjectType<
   TMessage extends ErrorMessage<ObjectIssue> | undefined,
 >(
   registry: Registry,
-  schema: TypeSchema<TEntries, TMessage>
+  schema: TypeSchema<TEntries, TMessage>,
 ): GraphQLObjectType {
+  if (registry.types[schema.name]) {
+    return registry.types[schema.name];
+  }
   if (isTypeSchema<ObjectEntries, undefined>(schema)) {
     const typeSchema = schema as TypeSchema<ObjectEntries, undefined>;
     const name = typeSchema.name;
@@ -233,13 +323,47 @@ export function toGraphQLObjectType<
     registry.types[name] = type;
     return type;
   }
-  throw new Error('Not a graphql type');
+  throw new Error(`Schema in union is not a graphql type`);
+}
+
+export function toGraphQLUnionType<
+  TOptions extends UnionOptions,
+  TMessage extends
+    | ErrorMessage<UnionIssue<InferIssue<TOptions[number]>>>
+    | undefined,
+>(
+  registry: Registry,
+  schema: UnionTypeSchema<TOptions, TMessage>,
+): GraphQLUnionType {
+  if (registry.unions[schema.name]) {
+    return registry.unions[schema.name];
+  }
+  if (isUnionTypeSchema<TOptions, TMessage>(schema)) {
+    const unionSchema = schema as UnionTypeSchema<TOptions, TMessage>;
+    const name = unionSchema.name;
+    const union = new GraphQLUnionType({
+      name,
+      types: unionSchema.options.map((option) => {
+        if (isTypeSchema(option)) {
+          let type = registry.types[option.name];
+          if (!type) {
+            type = toGraphQLObjectType(registry, option);
+          }
+          return type;
+        }
+        throw new Error('Union must contain graphql types');
+      }),
+    });
+    registry.unions[name] = union;
+    return union;
+  }
+  throw new Error('Not a graphql union');
 }
 
 function toInput(
   registry: Registry,
   schema: BaseSchema<unknown, unknown, BaseIssue<unknown>>,
-  optional = false
+  optional = false,
 ): GraphQLInputType {
   let type: GraphQLInputType | undefined = undefined;
   switch (schema.type) {
@@ -249,11 +373,11 @@ function toInput(
         type = type ? type : toGraphQLInputObjectType(registry, schema);
       } else if (isTypeSchema(schema)) {
         throw new Error(
-          `${schema.name} is a type and not allowed in an input in GraphQL`
+          `${schema.name} is a type and not allowed in an input in GraphQL`,
         );
       } else {
         throw new Error(
-          'Object is not an input or type. Nested objects not supported.'
+          'Object is not an input or type. Nested objects not supported.',
         );
       }
       break;
@@ -262,12 +386,12 @@ function toInput(
       type = toInput(
         registry,
         (schema as OptionalSchema<never, never>).wrapped,
-        optional
+        optional,
       );
       break;
     case 'array':
       type = new GraphQLList(
-        toInput(registry, (schema as ArraySchema<never, never>).item, optional)
+        toInput(registry, (schema as ArraySchema<never, never>).item, optional),
       );
       break;
     default:
@@ -281,8 +405,11 @@ export function toGraphQLInputObjectType<
   TMessage extends ErrorMessage<ObjectIssue> | undefined,
 >(
   registry: Registry,
-  schema: InputSchema<TEntries, TMessage>
+  schema: InputSchema<TEntries, TMessage>,
 ): GraphQLInputObjectType {
+  if (registry.inputs[schema.name]) {
+    return registry.inputs[schema.name];
+  }
   if (isInputSchema<ObjectEntries, undefined>(schema)) {
     const inputSchema = schema as InputSchema<ObjectEntries, undefined>;
     const name = inputSchema.name;
@@ -330,17 +457,17 @@ function toGraphQLParamsString(schema: ObjectSchema<any, any>): string {
       case 'object':
         if (isInputSchema(entry)) {
           const input = toGraphQLInputObjectType(
-            {types: {}, inputs: {}},
-            entry
+            {types: {}, unions: {}, inputs: {}},
+            entry,
           );
           str += `$${entryKey}: ${input.name}${optional ? '' : '!'}, `;
         } else if (isTypeSchema(entry)) {
           throw new Error(
-            `${entry.name} is an type and not allowed in input parameter in a GraphQL query`
+            `${entry.name} is an type and not allowed in input parameter in a GraphQL query`,
           );
         } else {
           throw new Error(
-            'Object is not an input. Nested objects not supported.'
+            'Object is not an input. Nested objects not supported.',
           );
         }
         break;
@@ -356,7 +483,7 @@ function toGraphQLParamsString(schema: ObjectSchema<any, any>): string {
 function toGraphQLBlockString(
   indent: string,
   // eslint-disable-next-line  @typescript-eslint/no-explicit-any
-  schema: ObjectSchema<any, any> | OptionalSchema<ObjectSchema<any, any>, any>
+  schema: ObjectSchema<any, any> | OptionalSchema<ObjectSchema<any, any>, any>,
 ): string {
   if (isOptionalSchema(schema)) {
     return toGraphQLBlockString(indent, schema.wrapped);
@@ -404,8 +531,10 @@ export function query<I, O>(
   name: string,
   // eslint-disable-next-line  @typescript-eslint/no-explicit-any
   argsSchema: ObjectSchema<any, any>,
-  // eslint-disable-next-line  @typescript-eslint/no-explicit-any
-  outputSchema: TypeSchema<any, any> | OptionalSchema<TypeSchema<any, any>, any>
+  outputSchema: // eslint-disable-next-line  @typescript-eslint/no-explicit-any
+  | TypeSchema<any, any>
+    // eslint-disable-next-line  @typescript-eslint/no-explicit-any
+    | OptionalSchema<TypeSchema<any, any>, any>,
 ): QueryFn<I, O> {
   const fn = function (variables: I): Query<I, O> {
     let query =
@@ -452,13 +581,13 @@ export function mutation<I, O>(
   // eslint-disable-next-line  @typescript-eslint/no-explicit-any
   argsSchema: ObjectSchema<any, any>,
   // eslint-disable-next-line  @typescript-eslint/no-explicit-any
-  outputSchema: TypeSchema<any, any>
+  outputSchema: TypeSchema<any, any>,
 ): MutationFn<I, O> {
   const fn = function (variables: I): Mutation<I, O> {
     let query =
       `mutation ${name}(` +
       toGraphQLParamsString(
-        isInputSchema(argsSchema) ? v.object({input: argsSchema}) : argsSchema
+        isInputSchema(argsSchema) ? v.object({input: argsSchema}) : argsSchema,
       ) +
       `) {\n  ${name}(`;
     if (isInputSchema(argsSchema)) {
@@ -487,7 +616,7 @@ export function mutation<I, O>(
 function toGraphQLQueryField(
   registry: Registry,
   // eslint-disable-next-line  @typescript-eslint/no-explicit-any
-  fn: QueryFn<any, any>
+  fn: QueryFn<any, any>,
 ): ThunkObjMap<GraphQLFieldConfig<unknown, unknown>> {
   const args: GraphQLFieldConfigArgumentMap = {};
   for (const key in fn.metadata.args.entries) {
@@ -511,6 +640,7 @@ function toGraphQLQueryField(
 export function toGraphQLSchema({
   types,
   inputs,
+  unions,
   queries,
   mutations,
 }: {
@@ -519,31 +649,35 @@ export function toGraphQLSchema({
   // eslint-disable-next-line  @typescript-eslint/no-explicit-any
   inputs: InputSchema<any, any>[];
   // eslint-disable-next-line  @typescript-eslint/no-explicit-any
+  unions: UnionTypeSchema<any, any>[];
+  // eslint-disable-next-line  @typescript-eslint/no-explicit-any
   queries: QueryFn<any, any>[];
   // eslint-disable-next-line  @typescript-eslint/no-explicit-any
   mutations: MutationFn<any, any>[];
 }): GraphQLSchema {
-  const registry = {
+  const registry: Registry = {
     types: {},
     inputs: {},
+    unions: {},
   };
-  const gTypes = types.map(type => toGraphQLObjectType(registry, type));
-  const gInputs = inputs.map(input =>
-    toGraphQLInputObjectType(registry, input)
+  const gUnions = unions.map((union) => toGraphQLUnionType(registry, union));
+  const gTypes = types.map((type) => toGraphQLObjectType(registry, type));
+  const gInputs = inputs.map((input) =>
+    toGraphQLInputObjectType(registry, input),
   );
   const queryFields = queries
-    .map(query => toGraphQLQueryField(registry, query))
+    .map((query) => toGraphQLQueryField(registry, query))
     .reduce((acc, fields) => ({...acc, ...fields}), {});
   const mutationFields = mutations
-    .map(mutationFn => {
+    .map((mutationFn) => {
       if (isInputSchema(mutationFn.metadata.args)) {
         return toGraphQLQueryField(
           registry,
           mutation(
             mutationFn.metadata.name,
             v.object({input: mutationFn.metadata.args}),
-            mutationFn.metadata.output
-          )
+            mutationFn.metadata.output,
+          ),
         );
       } else {
         return toGraphQLQueryField(registry, mutationFn);
@@ -551,7 +685,7 @@ export function toGraphQLSchema({
     })
     .reduce((acc, fields) => ({...acc, ...fields}), {});
   return new GraphQLSchema({
-    types: [...gTypes, ...gInputs],
+    types: [...gTypes, ...gInputs, ...gUnions],
     query:
       queries.length > 0
         ? new GraphQLObjectType({
@@ -572,6 +706,7 @@ export function toGraphQLSchema({
 export function toGraphQLSchemaString({
   types,
   inputs,
+  unions,
   queries,
   mutations,
 }: {
@@ -580,9 +715,13 @@ export function toGraphQLSchemaString({
   // eslint-disable-next-line  @typescript-eslint/no-explicit-any
   inputs: InputSchema<any, any>[];
   // eslint-disable-next-line  @typescript-eslint/no-explicit-any
+  unions: UnionTypeSchema<any, any>[];
+  // eslint-disable-next-line  @typescript-eslint/no-explicit-any
   queries: QueryFn<any, any>[];
   // eslint-disable-next-line  @typescript-eslint/no-explicit-any
   mutations: MutationFn<any, any>[];
 }): string {
-  return printSchema(toGraphQLSchema({types, inputs, queries, mutations}));
+  return printSchema(
+    toGraphQLSchema({types, inputs, unions, queries, mutations}),
+  );
 }

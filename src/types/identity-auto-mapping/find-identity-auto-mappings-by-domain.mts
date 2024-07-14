@@ -1,9 +1,6 @@
 import * as v from 'valibot';
 import * as vg from '../valibot-to-graphql.mjs';
-import {
-  IdentityAutoMapping,
-  IdentityAutoMappingSchema,
-} from './identity-auto-mapping.mjs';
+import {IdentityAutoMappingSchema} from './identity-auto-mapping.mjs';
 
 export const FindIdentityAutoMappingsByDomainArgsSchema = v.object({
   domain: v.string(),
@@ -16,7 +13,7 @@ export const FindIdentityAutoMappingsByDomainOutputSchema = vg.type(
   'FindIdentityAutoMappingsByDomainOutput',
   {
     mappings: v.array(IdentityAutoMappingSchema),
-  }
+  },
 );
 export type FindIdentityAutoMappingsByDomainOutput = v.InferOutput<
   typeof FindIdentityAutoMappingsByDomainOutputSchema
@@ -28,5 +25,5 @@ export const findIdentityAutoMappingsByDomain = vg.query<
 >(
   'findIdentityAutoMappingsByDomain',
   FindIdentityAutoMappingsByDomainArgsSchema,
-  FindIdentityAutoMappingsByDomainOutputSchema
+  FindIdentityAutoMappingsByDomainOutputSchema,
 );

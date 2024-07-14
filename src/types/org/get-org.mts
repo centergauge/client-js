@@ -14,5 +14,5 @@ export type GetOrgOutput = v.InferOutput<typeof GetOrgOutputSchema>;
 export const getOrg = vg.query<GetOrgArgs, GetOrgOutput>(
   'getOrg',
   GetOrgArgs,
-  v.optional(GetOrgOutputSchema)
+  v.optional(GetOrgOutputSchema),
 );

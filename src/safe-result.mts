@@ -1,5 +1,3 @@
-import {CenterGaugeClientError} from './errors.mjs';
-
 /**
  * Result object for safe methods.
  */
@@ -11,9 +9,9 @@ export interface SafeResult<T> {
   /**
    * The error if the operation was not successful.
    */
-  readonly error: CenterGaugeClientError | null;
+  readonly error?: Error | null;
   /**
    * The result of the operation if successful.
    */
-  readonly result: T | null;
+  readonly result?: T | null;
 }

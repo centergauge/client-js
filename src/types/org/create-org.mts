@@ -15,5 +15,5 @@ export type CreateOrgOutput = v.InferOutput<typeof CreateOrgOutputSchema>;
 export const createOrg = vg.mutation<CreateOrgInput, CreateOrgOutput>(
   'createOrg',
   CreateOrgInputSchema,
-  CreateOrgOutputSchema
+  CreateOrgOutputSchema,
 );

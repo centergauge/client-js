@@ -13,7 +13,7 @@ export const FindExternalIdentifiersByOrgOutputSchema = vg.type(
   'FindExternalIdentifiersByOrgOutput',
   {
     externalIdentifiers: v.array(ExternalIdentifierSchema),
-  }
+  },
 );
 export type FindExternalIdentifiersByOrgOutput = v.InferOutput<
   typeof FindExternalIdentifiersByOrgOutputSchema
@@ -25,5 +25,5 @@ export const findExternalIdentifiersByOrg = vg.query<
 >(
   'findExternalIdentifiersByOrg',
   FindExternalIdentifiersByOrgArgsSchema,
-  FindExternalIdentifiersByOrgOutputSchema
+  FindExternalIdentifiersByOrgOutputSchema,
 );

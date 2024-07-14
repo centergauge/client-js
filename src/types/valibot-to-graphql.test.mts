@@ -1,4 +1,3 @@
-// eslint-disable-next-line n/no-unpublished-import
 import {expect, test} from 'vitest';
 import * as vg from './valibot-to-graphql.mjs';
 import * as v from 'valibot';
@@ -66,6 +65,7 @@ test('Test toGraphQLSchema', () => {
   const schemaString = vg.toGraphQLSchemaString({
     types: [TestTypeSchema, TestComplexTypeSchema],
     inputs: [TestInputSchema, TestComplexInputSchema],
+    unions: [],
     queries: [],
     mutations: [],
   });
@@ -103,7 +103,7 @@ test('Test toGraphQLSchema', () => {
       '  bin: [String]\n' +
       '  meow: TestInput\n' +
       '  bark: TestInput!\n' +
-      '}'
+      '}',
   );
 });
 
@@ -124,9 +124,10 @@ test('Test nested object on Type', () => {
     vg.toGraphQLSchemaString({
       types: [NestedTypeSchema],
       inputs: [],
+      unions: [],
       queries: [],
       mutations: [],
-    })
+    }),
   ).toThrow();
 });
 
@@ -147,8 +148,9 @@ test('Test nested on Input', () => {
     vg.toGraphQLSchemaString({
       types: [],
       inputs: [NestedInputSchema],
+      unions: [],
       queries: [],
       mutations: [],
-    })
+    }),
   ).toThrow();
 });
