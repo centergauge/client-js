@@ -32,3 +32,33 @@ export const PropertySchema = vg.union('Property', [
   FloatPropertySchema,
 ]);
 export type Property = v.InferOutput<typeof PropertySchema>;
+
+export const StringPropertyInputSchema = vg.input('StringPropertyInput', {
+  key: v.string(),
+  value: v.string(),
+});
+export type StringPropertyInput = v.InferInput<
+  typeof StringPropertyInputSchema
+>;
+
+export const BooleanPropertyInputSchema = vg.input('BooleanPropertyInput', {
+  key: v.string(),
+  value: v.boolean(),
+});
+export type BooleanPropertyInput = v.InferInput<
+  typeof BooleanPropertyInputSchema
+>;
+
+export const IntegerPropertyInputSchema = vg.input('IntegerPropertyInput', {
+  key: v.string(),
+  value: v.number(), // TODO In the future move to v.integer()
+});
+export type IntegerPropertyInput = v.InferInput<
+  typeof IntegerPropertyInputSchema
+>;
+
+export const FloatPropertyInputSchema = vg.input('FloatPropertyInput', {
+  key: v.string(),
+  value: vg.float(),
+});
+export type FloatPropertyInput = v.InferInput<typeof FloatPropertyInputSchema>;

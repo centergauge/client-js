@@ -53,6 +53,15 @@ import {
   IntegerPropertySchema,
   PropertySchema,
   getExternalIdentifier,
+  getResource,
+  CreateResourceInputSchema,
+  createResource,
+  BooleanPropertyInputSchema,
+  StringPropertyInputSchema,
+  FloatPropertyInputSchema,
+  IntegerPropertyInputSchema,
+  RelatedResourceSchema,
+  RelatedResourceInputSchema,
 } from './types/index.mjs';
 
 export interface ClientCredentialsConfig {
@@ -242,11 +251,17 @@ export class CenterGaugeClient {
         CreateIdentityAutoMappingOutputSchema,
         FindIdentityAutoMappingsByDomainOutputSchema,
 
+        RelatedResourceSchema,
         ResourceSchema,
 
         AlertSchema,
       ],
       inputs: [
+        StringPropertyInputSchema,
+        BooleanPropertyInputSchema,
+        FloatPropertyInputSchema,
+        IntegerPropertyInputSchema,
+
         CreateOrgInputSchema,
         UpdateOrgInputSchema,
 
@@ -258,6 +273,9 @@ export class CenterGaugeClient {
         CreateIdentityAutoMappingInputSchema,
 
         CreateAlertInputSchema,
+
+        RelatedResourceInputSchema,
+        CreateResourceInputSchema,
       ],
       unions: [PropertySchema],
       queries: [
@@ -267,6 +285,7 @@ export class CenterGaugeClient {
         findIdentityAutoMappingsByDomain,
         getExternalIdentifier,
         findExternalIdentifiersByOrg,
+        getResource,
       ],
       mutations: [
         createOrg,
@@ -276,6 +295,7 @@ export class CenterGaugeClient {
         createIdentityOrgAssignment,
         createIdentityAutoMapping,
         createAlert,
+        createResource,
       ],
     });
   }
