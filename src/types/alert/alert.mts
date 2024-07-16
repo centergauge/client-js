@@ -15,13 +15,6 @@ export const AlarmSignalSourceSchema = v.picklist([
 ]);
 export type AlarmSignalSource = v.InferOutput<typeof AlarmSignalSourceSchema>;
 
-export const AlertOrgSchema = vg.type('AlertOrg', {
-  id: v.string(),
-  slug: v.string(),
-  name: v.string(),
-});
-export type AlertOrg = v.InferOutput<typeof AlertOrgSchema>;
-
 export const AlertSchema = vg.type('Alert', {
   id: v.string(),
   orgId: v.string(),
