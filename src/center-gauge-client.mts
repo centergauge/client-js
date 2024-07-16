@@ -52,6 +52,7 @@ import {
   FloatPropertySchema,
   IntegerPropertySchema,
   PropertySchema,
+  getExternalIdentifier,
 } from './types/index.mjs';
 
 export interface ClientCredentialsConfig {
@@ -264,6 +265,7 @@ export class CenterGaugeClient {
         findOrgBySlug,
         getIdentity,
         findIdentityAutoMappingsByDomain,
+        getExternalIdentifier,
         findExternalIdentifiersByOrg,
       ],
       mutations: [
