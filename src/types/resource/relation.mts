@@ -3,7 +3,6 @@ import * as vg from '../valibot-to-graphql.mjs';
 import {RelatedResourceSchema} from './resource.mjs';
 
 export const RelationTypeSchema = v.picklist([
-  'createdBy',
   'dependsOn',
   'usedBy',
   'partOf',
