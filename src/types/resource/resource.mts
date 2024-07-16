@@ -1,6 +1,6 @@
 import * as v from 'valibot';
 import * as vg from '../valibot-to-graphql.mjs';
-import {PropertySchema, StringPropertySchema} from '../common.mjs';
+import {PropertySchema} from '../common.mjs';
 import {OrgIdSchema} from '../org/index.mjs';
 
 export const CategorySchema = v.picklist(['aws']);

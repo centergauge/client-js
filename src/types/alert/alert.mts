@@ -20,10 +20,11 @@ export const AlertSchema = vg.type('Alert', {
   orgId: v.string(),
   orgName: v.string(),
   severity: AlertSeveritySchema,
-  state: AlarmStateSchema,
   when: v.string(),
   source: AlarmSignalSourceSchema,
-  name: v.string(),
+  alarmId: v.string(),
+  alarmName: v.string(),
+  alarmState: AlarmStateSchema,
   reason: v.optional(v.string()),
   relations: v.array(RelationSchema),
 });
