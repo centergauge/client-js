@@ -28,3 +28,7 @@ export const AlertSchema = vg.type('Alert', {
   relations: v.array(RelationSchema),
 });
 export type Alert = v.InferOutput<typeof AlertSchema>;
+
+export function isAlert(o: unknown): o is Alert {
+  return v.safeParse(AlertSchema, o).success;
+}
