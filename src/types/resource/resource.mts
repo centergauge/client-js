@@ -1,6 +1,6 @@
 import * as v from 'valibot';
 import * as vg from '../valibot-to-graphql.mjs';
-import {StringPropertySchema} from '../common.mjs';
+import {PropertySchema, StringPropertySchema} from '../common.mjs';
 import {OrgIdSchema} from '../org/index.mjs';
 
 export const CategorySchema = v.picklist(['aws']);
@@ -36,7 +36,7 @@ export const ResourceSchema = vg.type('Resource', {
   category: CategorySchema,
   service: ServiceSchema,
   type: ResourceTypeSchema,
-  properties: v.array(StringPropertySchema),
+  properties: v.array(PropertySchema),
   relations: v.array(RelatedResourceSchema),
 });
 export type Resource = v.InferOutput<typeof ResourceSchema>;

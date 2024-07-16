@@ -56,10 +56,7 @@ import {
   getResource,
   CreateResourceInputSchema,
   createResource,
-  BooleanPropertyInputSchema,
-  StringPropertyInputSchema,
-  FloatPropertyInputSchema,
-  IntegerPropertyInputSchema,
+  PropertyInputSchema,
   RelatedResourceSchema,
   RelatedResourceInputSchema,
 } from './types/index.mjs';
@@ -257,10 +254,7 @@ export class CenterGaugeClient {
         AlertSchema,
       ],
       inputs: [
-        StringPropertyInputSchema,
-        BooleanPropertyInputSchema,
-        FloatPropertyInputSchema,
-        IntegerPropertyInputSchema,
+        PropertyInputSchema,
 
         CreateOrgInputSchema,
         UpdateOrgInputSchema,

@@ -9,7 +9,7 @@ import {
   ServiceSchema,
 } from './resource.mjs';
 import {OrgIdSchema} from '../org/index.mjs';
-import {StringPropertyInputSchema} from '../common.mjs';
+import {PropertyInputSchema} from '../common.mjs';
 
 export const CreateResourceInputSchema = vg.input('CreateResourceInput', {
   orgId: OrgIdSchema,
@@ -17,7 +17,7 @@ export const CreateResourceInputSchema = vg.input('CreateResourceInput', {
   category: CategorySchema,
   service: ServiceSchema,
   type: ResourceTypeSchema,
-  properties: v.array(StringPropertyInputSchema),
+  properties: v.array(PropertyInputSchema),
   relations: v.array(RelatedResourceInputSchema),
 });
 export type CreateResourceInput = v.InferInput<
