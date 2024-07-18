@@ -3,10 +3,18 @@ import * as vg from '../valibot-to-graphql.mjs';
 
 export const OrgIdSchema = v.pipe(vg.id(), v.uuid());
 
+export const SlugSchema = v.pipe(v.string(), v.minLength(3), v.maxLength(30));
+
+export const OrgNameSchema = v.pipe(
+  v.string(),
+  v.minLength(3),
+  v.maxLength(60),
+);
+
 export const OrgSchema = vg.type('Org', {
   id: OrgIdSchema,
-  slug: v.pipe(v.string(), v.minLength(3), v.maxLength(30)),
-  name: v.pipe(v.string(), v.minLength(3), v.maxLength(60)),
+  slug: SlugSchema,
+  name: OrgNameSchema,
   lightIcon: v.optional(v.pipe(v.string(), v.url())),
   darkIcon: v.optional(v.pipe(v.string(), v.url())),
   publicSignInEnabled: v.optional(v.boolean()),
