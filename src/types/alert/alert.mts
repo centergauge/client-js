@@ -1,6 +1,6 @@
 import * as v from 'valibot';
 import * as vg from '../valibot-to-graphql.mjs';
-import {RelationSchema} from '../resource/index.mjs';
+import {RelatedResourceSchema} from '../resource/index.mjs';
 
 export const AlertSeveritySchema = v.picklist(['warning', 'critical']);
 export type AlertSeverity = v.InferOutput<typeof AlertSeveritySchema>;
@@ -26,7 +26,7 @@ export const AlertSchema = vg.type('Alert', {
   alarmName: v.string(),
   alarmState: AlarmStateSchema,
   reason: v.optional(v.string()),
-  relations: v.array(RelationSchema),
+  relations: v.array(RelatedResourceSchema),
 });
 export type Alert = v.InferOutput<typeof AlertSchema>;
 

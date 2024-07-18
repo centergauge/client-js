@@ -44,7 +44,6 @@ import {
   FindExternalIdentifiersByOrgOutputSchema,
   findExternalIdentifiersByOrg,
   createAlert,
-  CreateAlertInputSchema,
   AlertSchema,
   ResourceSchema,
   StringPropertySchema,
@@ -54,12 +53,13 @@ import {
   PropertySchema,
   getExternalIdentifier,
   getResource,
-  CreateResourceInputSchema,
   createResource,
   PropertyInputSchema,
   RelatedResourceSchema,
   RelatedResourceInputSchema,
 } from './types/index.mjs';
+import {ResourceInputSchema} from './types/resource/resource-input.mjs';
+import {AlertInputSchema} from './types/alert/alert-input.mjs';
 
 export interface ClientCredentialsConfig {
   readonly clientId: string | Promise<string>;
@@ -266,10 +266,10 @@ export class CenterGaugeClient {
 
         CreateIdentityAutoMappingInputSchema,
 
-        CreateAlertInputSchema,
+        AlertInputSchema,
 
         RelatedResourceInputSchema,
-        CreateResourceInputSchema,
+        ResourceInputSchema,
       ],
       unions: [PropertySchema],
       queries: [
