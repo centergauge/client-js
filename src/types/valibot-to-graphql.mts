@@ -122,9 +122,6 @@ export function type<TEntries extends ObjectEntries>(
   name: string,
   entries: TEntries,
 ): TypeSchema<TEntries, undefined> {
-  if (name === 'RelatedResource') {
-    console.log('bark', entries);
-  }
   return {
     ...object(entries),
     gtype: 'Type',
@@ -258,7 +255,6 @@ function toType(
   optional = false,
 ): GraphQLOutputType {
   let type: GraphQLOutputType | undefined = undefined;
-  console.log(schema);
   switch (schema.type) {
     case 'object':
       if (isTypeSchema(schema)) {
