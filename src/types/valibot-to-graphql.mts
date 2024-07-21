@@ -493,14 +493,30 @@ function toGraphQLBlockString(
     for (const key in (schema as ObjectSchema<any, any>).entries) {
       // eslint-disable-next-line  @typescript-eslint/no-explicit-any
       const entry = (schema as ObjectSchema<any, any>).entries[key];
-      const rootEntry = isArraySchema(entry)
-        ? entry.item
-        : isOptionalSchema(entry)
-          ? entry.wrapped
-          : entry;
-      str += `\n${indent}  ${key}`;
-      if (rootEntry.type === 'object') {
-        str += ' ' + toGraphQLBlockString(indent + '  ', rootEntry);
+      if (isArraySchema(entry) && isUnionTypeSchema(entry.item)) {
+        str += `\n${indent}  ${key} {`;
+        for (const option of entry.item.options) {
+          if (isTypeSchema(option)) {
+            str += `\n${indent}    ... on ${option.name} {`;
+            for (const optionKey in option.entries) {
+              str += `\n${indent}      ${optionKey}`;
+            }
+            str += `\n${indent}    }`;
+          } else {
+            throw new Error('Schema in union is not a type');
+          }
+        }
+        str += `\n${indent}  }`;
+      } else {
+        const rootEntry = isArraySchema(entry)
+          ? entry.item
+          : isOptionalSchema(entry)
+            ? entry.wrapped
+            : entry;
+        str += `\n${indent}  ${key}`;
+        if (rootEntry.type === 'object') {
+          str += ' ' + toGraphQLBlockString(indent + '  ', rootEntry);
+        }
       }
     }
     str += `\n${indent}  __typename`;

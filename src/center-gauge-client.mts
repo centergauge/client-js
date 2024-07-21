@@ -3,7 +3,7 @@ import {Amplify} from 'aws-amplify';
 import {generateClient, GraphQLResult} from 'aws-amplify/api';
 import {V6Client} from '@aws-amplify/api-graphql';
 import {ConsoleLogger} from 'aws-amplify/utils';
-import {SafeResult} from './safe-result.mjs';
+import {SafeResult} from './types/safe-result.mjs';
 import {CenterGaugeClientError, isCenterGaugeClientError} from './errors.mjs';
 import {
   getIdentity,
@@ -53,13 +53,14 @@ import {
   PropertySchema,
   getExternalIdentifier,
   getResource,
-  createResource,
+  saveResource,
   PropertyInputSchema,
   RelatedResourceSchema,
   RelatedResourceInputSchema,
+  ResourceInputSchema,
+  AlertInputSchema,
+  StringArrayPropertySchema,
 } from './types/index.mjs';
-import {ResourceInputSchema} from './types/resource/resource-input.mjs';
-import {AlertInputSchema} from './types/alert/alert-input.mjs';
 
 export interface ClientCredentialsConfig {
   readonly clientId: string | Promise<string>;
@@ -225,6 +226,7 @@ export class CenterGaugeClient {
         StringPropertySchema,
         FloatPropertySchema,
         IntegerPropertySchema,
+        StringArrayPropertySchema,
 
         OrgSchema,
         OrgAssignmentSchema,
@@ -289,7 +291,7 @@ export class CenterGaugeClient {
         createIdentityOrgAssignment,
         createIdentityAutoMapping,
         createAlert,
-        createResource,
+        saveResource,
       ],
     });
   }

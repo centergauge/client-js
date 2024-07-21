@@ -9,7 +9,7 @@ export interface SafeResult<T> {
   /**
    * The error if the operation was not successful.
    */
-  readonly error?: Error | null;
+  readonly error?: unknown;
   /**
    * The result of the operation if successful.
    */
