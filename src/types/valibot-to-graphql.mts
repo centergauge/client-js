@@ -238,6 +238,8 @@ function toScalarType(
         return GraphQLID;
       }
       return GraphQLString;
+    case 'literal':
+      return GraphQLString;
     case 'boolean':
       return GraphQLBoolean;
     case 'number':
