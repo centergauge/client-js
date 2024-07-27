@@ -484,8 +484,12 @@ function toGraphQLParamsString(schema: ObjectSchema<any, any>): string {
 
 function toGraphQLBlockString(
   indent: string,
-  // eslint-disable-next-line  @typescript-eslint/no-explicit-any
-  schema: ObjectSchema<any, any> | OptionalSchema<ObjectSchema<any, any>, any>,
+  schema: // eslint-disable-next-line  @typescript-eslint/no-explicit-any
+  | ObjectSchema<any, any>
+    // eslint-disable-next-line  @typescript-eslint/no-explicit-any
+    | OptionalSchema<ObjectSchema<any, any>, any>
+    // eslint-disable-next-line  @typescript-eslint/no-explicit-any
+    | ArraySchema<ObjectSchema<any, any>, any>,
 ): string {
   if (isOptionalSchema(schema)) {
     return toGraphQLBlockString(indent, schema.wrapped);
@@ -541,7 +545,12 @@ export interface QueryFn<I, O> {
     // eslint-disable-next-line  @typescript-eslint/no-explicit-any
     args: ObjectSchema<any, any>;
     // eslint-disable-next-line  @typescript-eslint/no-explicit-any
-    output: TypeSchema<any, any> | OptionalSchema<TypeSchema<any, any>, any>;
+    output: // eslint-disable-next-line  @typescript-eslint/no-explicit-any
+    | TypeSchema<any, any>
+      // eslint-disable-next-line  @typescript-eslint/no-explicit-any
+      | OptionalSchema<TypeSchema<any, any>, any>
+      // eslint-disable-next-line  @typescript-eslint/no-explicit-any
+      | ArraySchema<TypeSchema<any, any>, any>;
   };
 }
 
@@ -552,7 +561,9 @@ export function query<I, O>(
   outputSchema: // eslint-disable-next-line  @typescript-eslint/no-explicit-any
   | TypeSchema<any, any>
     // eslint-disable-next-line  @typescript-eslint/no-explicit-any
-    | OptionalSchema<TypeSchema<any, any>, any>,
+    | OptionalSchema<TypeSchema<any, any>, any>
+    // eslint-disable-next-line  @typescript-eslint/no-explicit-any
+    | ArraySchema<TypeSchema<any, any>, any>,
 ): QueryFn<I, O> {
   const fn = function (variables: I): Query<I, O> {
     let query =
