@@ -138,6 +138,9 @@ export class CenterGaugeClient {
     try {
       return await fn();
     } catch (e) {
+      if (isCenterGaugeClientError(e)) {
+        throw e;
+      }
       if (isGraphQLResult(e)) {
         if (e.errors) {
           throw new CenterGaugeClientError(
@@ -187,7 +190,7 @@ export class CenterGaugeClient {
     }
   }
 
-  async query<I, O>(query: Query<I, O>): Promise<O | null> {
+  async query<I, O>(query: Query<I, O>): Promise<O> {
     return this.executeGraphQL<O>(async () => {
       const result = (await this.graphClient.graphql(
         query,
@@ -196,13 +199,13 @@ export class CenterGaugeClient {
     });
   }
 
-  async safeQuery<I, O>(query: Query<I, O>): Promise<SafeResult<O | null>> {
+  async safeQuery<I, O>(query: Query<I, O>): Promise<SafeResult<O>> {
     return this.executeSafeResult(async () => {
       return this.query<I, O>(query);
     });
   }
 
-  async mutate<I, O>(mutation: Mutation<I, O>): Promise<O | null> {
+  async mutate<I, O>(mutation: Mutation<I, O>): Promise<O> {
     return this.executeGraphQL<O>(async () => {
       const result = (await this.graphClient.graphql(
         mutation,
@@ -211,9 +214,7 @@ export class CenterGaugeClient {
     });
   }
 
-  async safeMutate<I, O>(
-    mutation: Mutation<I, O>,
-  ): Promise<SafeResult<O | null>> {
+  async safeMutate<I, O>(mutation: Mutation<I, O>): Promise<SafeResult<O>> {
     return this.executeSafeResult(async () => {
       return this.mutate<I, O>(mutation);
     });
