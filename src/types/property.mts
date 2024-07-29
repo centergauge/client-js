@@ -115,6 +115,16 @@ export const PropertyTypeSchema = v.picklist([
 ]);
 export type PropertyType = v.InferOutput<typeof PropertyInputSchema>;
 
+export function isProperty(o: unknown): o is Property {
+  return (
+    isStringProperty(o) ||
+    isBooleanProperty(o) ||
+    isIntegerProperty(o) ||
+    isFloatProperty(o) ||
+    isStringArrayProperty(o)
+  );
+}
+
 export const PropertyInputSchema = vg.input('PropertyInput', {
   key: v.string(),
   value: v.string(),
@@ -193,10 +203,21 @@ export function fromProperty(property: Property): PropertyInput {
   };
 }
 
-export function propertyInputsToRecord(
+export const PropertyValueSchema = v.union([
+  v.string(),
+  v.number(),
+  v.boolean(),
+  v.array(v.string()),
+]);
+export type PropertyValue = v.InferOutput<typeof PropertyValueSchema>;
+
+export const PropertyRecordSchema = v.record(v.string(), PropertyValueSchema);
+export type PropertyRecord = v.InferOutput<typeof PropertyRecordSchema>;
+
+export function propertyInputsToPropertyRecord(
   properties: PropertyInput[],
-): Record<string, string | number | boolean | string[]> {
-  const record: Record<string, string | number | boolean | string[]> = {};
+): PropertyRecord {
+  const record: PropertyRecord = {};
   for (const property of properties) {
     switch (property.type) {
       case 'string[]':
@@ -219,9 +240,27 @@ export function propertyInputsToRecord(
   return record;
 }
 
-export function recordToProperties(
-  map: Record<string, string | number | boolean | string[]>,
-): Property[] {
+export function propertiesToPropertyRecord(
+  properties: Property[],
+): PropertyRecord {
+  const record: PropertyRecord = {};
+  for (const property of properties) {
+    if (isBooleanProperty(property)) {
+      record[property.key] = property.booleanValue;
+    } else if (isIntegerProperty(property)) {
+      record[property.key] = property.integerValue;
+    } else if (isFloatProperty(property)) {
+      record[property.key] = property.floatValue;
+    } else if (isStringArrayProperty(property)) {
+      record[property.key] = property.stringValues;
+    } else {
+      record[property.key] = property.stringValue;
+    }
+  }
+  return record;
+}
+
+export function propertyRecordToProperties(map: PropertyRecord): Property[] {
   const properties: Property[] = [];
   for (const [key, value] of Object.entries(map)) {
     if (Array.isArray(value)) {

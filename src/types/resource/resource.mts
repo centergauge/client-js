@@ -1,18 +1,90 @@
 import * as v from 'valibot';
 import * as vg from '../valibot-to-graphql.mjs';
-import {PropertySchema} from '../property.mjs';
+import {
+  isProperty,
+  propertiesToPropertyRecord,
+  PropertyInputSchema,
+  PropertyRecordSchema,
+  PropertySchema,
+  propertyRecordToProperties,
+} from '../property.mjs';
 import {OrgIdSchema} from '../org/index.mjs';
-import {RelatedResourceSchema} from './related-resource.mjs';
-import {ResourceCategorySchema} from './resource-category.mjs';
-import {ResourceServiceSchema} from './resource-service.mjs';
-import {ResourceTypeSchema} from './resource-type.mjs';
+
+export const RelationTypeSchema = v.picklist([
+  'contains',
+  'containedIn',
+  'uses',
+  'usedBy',
+  'relatesTo',
+]);
+export type RelationType = v.InferOutput<typeof RelationTypeSchema>;
+
+export const RelatedResourceReferenceSchema = vg.type(
+  'RelatedResourceReference',
+  {
+    relationType: RelationTypeSchema,
+    id: v.string(),
+  },
+);
+export type RelatedResourceReference = v.InferOutput<
+  typeof RelatedResourceReferenceSchema
+>;
+
+export function isRelatedResourceReference(
+  o: unknown,
+): o is RelatedResourceReference {
+  if (!o) {
+    return false;
+  }
+  const r = o as Partial<RelatedResourceReference>;
+  return typeof r.id === 'string' && typeof r.relationType === 'string';
+}
+
+export const RelatedResourceProjectionSchema = vg.type(
+  'RelatedResourceProjection',
+  {
+    id: v.string(),
+    relationType: RelationTypeSchema,
+    properties: v.array(PropertySchema),
+    relations: v.array(RelatedResourceReferenceSchema),
+    createdAt: v.string(),
+    updatedAt: v.string(),
+  },
+);
+export type RelatedResourceProjection = v.InferOutput<
+  typeof RelatedResourceProjectionSchema
+>;
+
+export function isRelatedResourceProjection(
+  o: unknown,
+): o is RelatedResourceProjection {
+  if (!o) {
+    return false;
+  }
+  const p = o as Partial<RelatedResourceProjection>;
+  return (
+    typeof p.id === 'string' &&
+    typeof p.relationType === 'string' &&
+    Array.isArray(p.properties) &&
+    p.properties.every((property: unknown) => isProperty(property)) &&
+    Array.isArray(p.relations) &&
+    p.relations.every((relation: unknown) =>
+      isRelatedResourceReference(relation),
+    ) &&
+    typeof p.createdAt === 'string' &&
+    typeof p.updatedAt === 'string'
+  );
+}
+
+export const RelatedResourceSchema = vg.union('RelatedResource', [
+  RelatedResourceProjectionSchema,
+  RelatedResourceReferenceSchema,
+]);
+export type RelatedResource = v.InferOutput<typeof RelatedResourceSchema>;
 
 export const ResourceSchema = vg.type('Resource', {
   orgId: OrgIdSchema,
   id: v.string(),
-  category: ResourceCategorySchema,
-  service: ResourceServiceSchema,
-  type: ResourceTypeSchema,
   properties: v.array(PropertySchema),
   relations: v.array(RelatedResourceSchema),
   createdAt: v.string(),
@@ -20,3 +92,286 @@ export const ResourceSchema = vg.type('Resource', {
   inputHash: v.string(),
 });
 export type Resource = v.InferOutput<typeof ResourceSchema>;
+
+///////////////////////////////////////////////////////////////////////////////
+// Resource Input Types
+//
+// Minimal input types for creating and updating resources. Resources are
+// hydrated where possible to include properties and relations when querying.
+///////////////////////////////////////////////////////////////////////////////
+export const RelatedResourceInputSchema = vg.input('RelatedResourceInput', {
+  relationType: RelationTypeSchema,
+  id: v.string(),
+});
+export type RelatedResourceInput = v.InferInput<
+  typeof RelatedResourceInputSchema
+>;
+
+export function isRelatedResourceInput(o: unknown): o is RelatedResourceInput {
+  if (!o) {
+    return false;
+  }
+  const r = o as Partial<RelatedResourceInput>;
+  return typeof r.id === 'string' && typeof r.relationType === 'string';
+}
+
+export const ResourceInputSchema = vg.input('CreateResourceInput', {
+  orgId: OrgIdSchema,
+  id: v.string(),
+  properties: v.array(PropertyInputSchema),
+  relations: v.array(RelatedResourceInputSchema),
+});
+export type ResourceInput = v.InferInput<typeof ResourceInputSchema>;
+
+export function isResourceInput(o: unknown): o is ResourceInput {
+  if (!o) {
+    return false;
+  }
+  const r = o as Partial<ResourceInput>;
+  return (
+    typeof r.orgId === 'string' &&
+    typeof r.id === 'string' &&
+    Array.isArray(r.properties) &&
+    r.properties.every((property: unknown) => isProperty(property)) &&
+    Array.isArray(r.relations) &&
+    r.relations.every((relation: unknown) => isRelatedResourceInput(relation))
+  );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// Resource Record Types
+//
+// The following types are more suitable for working in TypeScript, but due to
+// limitations with GraphQL, could not be first class citizens. Helper methods
+// to convert between these types and the GraphQL types are provided.
+///////////////////////////////////////////////////////////////////////////////
+export const RelatedResourceReferenceRecordSchema = v.record(
+  RelationTypeSchema,
+  v.array(v.string()),
+);
+export type RelatedResourceReferenceRecord = v.InferOutput<
+  typeof RelatedResourceReferenceRecordSchema
+>;
+
+export function toRelatedResourceReferenceRecord(
+  relations: RelatedResourceReference[],
+): RelatedResourceReferenceRecord {
+  const record: RelatedResourceReferenceRecord = {};
+  relations.forEach((relation) => {
+    let array = record[relation.relationType];
+    if (!array) {
+      array = [];
+      record[relation.relationType] = array;
+    }
+    array.push(relation.id);
+  });
+  return record;
+}
+
+export function fromRelatedResourceReferenceRecord(
+  record: RelatedResourceReferenceRecord,
+): RelatedResourceReference[] {
+  const relations: RelatedResourceReference[] = [];
+  for (const relationType in record) {
+    const ids = record[relationType as RelationType];
+    if (ids) {
+      for (const id of ids) {
+        relations.push({id, relationType: relationType as RelationType});
+      }
+    }
+  }
+  return relations;
+}
+
+export const RelatedResourceProjectionRecordValueSchema = v.object({
+  id: v.string(),
+  properties: PropertyRecordSchema,
+  relations: RelatedResourceReferenceRecordSchema,
+  createdAt: v.string(),
+  updatedAt: v.string(),
+});
+export type RelatedResourceProjectionRecordValue = v.InferOutput<
+  typeof RelatedResourceProjectionRecordValueSchema
+>;
+
+export function toRelatedResourceProjectionRecordValue(
+  relation: RelatedResourceProjection,
+): RelatedResourceProjectionRecordValue {
+  return {
+    id: relation.id,
+    properties: propertiesToPropertyRecord(relation.properties),
+    relations: toRelatedResourceReferenceRecord(relation.relations),
+    createdAt: relation.createdAt,
+    updatedAt: relation.updatedAt,
+  };
+}
+
+export function fromRelatedResourceProjectionRecordValue(
+  relationType: RelationType,
+  value: RelatedResourceProjectionRecordValue,
+): RelatedResourceProjection {
+  return {
+    id: value.id,
+    relationType,
+    properties: propertyRecordToProperties(value.properties),
+    relations: fromRelatedResourceReferenceRecord(value.relations),
+    createdAt: value.createdAt,
+    updatedAt: value.updatedAt,
+  };
+}
+
+export const RelatedResourceProjectionRecordSchema = v.record(
+  RelationTypeSchema,
+  v.array(RelatedResourceProjectionRecordValueSchema),
+);
+export type RelatedResourceProjectionRecord = v.InferOutput<
+  typeof RelatedResourceProjectionRecordSchema
+>;
+
+export function toRelatedResourceProjectionRecord(
+  relations: RelatedResourceProjection[],
+): RelatedResourceProjectionRecord {
+  const record: RelatedResourceProjectionRecord = {};
+  relations.forEach((relation) => {
+    if (!record[relation.relationType]) {
+      record[relation.relationType] = [];
+    }
+    record[relation.relationType]!.push(
+      toRelatedResourceProjectionRecordValue(relation),
+    );
+  });
+  return record;
+}
+
+export function fromRelatedResourceProjectRecord(
+  record: RelatedResourceProjectionRecord,
+): RelatedResourceProjection[] {
+  const relations: RelatedResourceProjection[] = [];
+  for (const relationType in record) {
+    const values = record[relationType as RelationType];
+    if (Array.isArray(values)) {
+      values.forEach((value) => {
+        relations.push(
+          fromRelatedResourceProjectionRecordValue(
+            relationType as RelationType,
+            value,
+          ),
+        );
+      });
+    }
+  }
+  return relations;
+}
+
+export const RelatedResourceRecordSchema = v.record(
+  RelationTypeSchema,
+  v.array(v.union([v.string(), RelatedResourceProjectionRecordValueSchema])),
+);
+export type RelatedResourceRecord = v.InferOutput<
+  typeof RelatedResourceRecordSchema
+>;
+
+export function toRelatedResourceRecord(
+  resource: RelatedResource[],
+): RelatedResourceRecord {
+  const record: RelatedResourceRecord = {};
+  resource.forEach((relation) => {
+    const relationType = relation.relationType;
+    if (!record[relationType]) {
+      record[relationType] = [];
+    }
+    if (isRelatedResourceProjection(relation)) {
+      record[relationType]!.push(
+        toRelatedResourceProjectionRecordValue(relation),
+      );
+    } else {
+      record[relationType]!.push(relation.id);
+    }
+  });
+  return record;
+}
+
+export function fromRelatedResourceRecord(
+  record: RelatedResourceRecord,
+): RelatedResource[] {
+  const relations: RelatedResource[] = [];
+  for (const relationType in record) {
+    const values = record[relationType as RelationType];
+    if (Array.isArray(values)) {
+      values.forEach((value) => {
+        if (typeof value === 'string') {
+          relations.push({
+            id: value,
+            relationType: relationType as RelationType,
+          });
+        } else {
+          relations.push(
+            fromRelatedResourceProjectionRecordValue(
+              relationType as RelationType,
+              value,
+            ),
+          );
+        }
+      });
+    }
+  }
+  return relations;
+}
+
+export const ResourceRecordSchema = v.object({
+  orgId: OrgIdSchema,
+  id: v.string(),
+  properties: PropertyRecordSchema,
+  relations: RelatedResourceRecordSchema,
+  createdAt: v.string(),
+  updatedAt: v.string(),
+  inputHash: v.string(),
+});
+export type ResourceRecord = v.InferOutput<typeof ResourceRecordSchema>;
+
+export function toResourceRecord(resource: Resource): ResourceRecord {
+  return {
+    orgId: resource.orgId,
+    id: resource.id,
+    properties: propertiesToPropertyRecord(resource.properties),
+    relations: toRelatedResourceRecord(resource.relations),
+    createdAt: resource.createdAt,
+    updatedAt: resource.updatedAt,
+    inputHash: resource.inputHash,
+  };
+}
+
+export function fromResourceRecord(record: ResourceRecord): Resource {
+  return {
+    orgId: record.orgId,
+    id: record.id,
+    properties: propertyRecordToProperties(record.properties),
+    relations: fromRelatedResourceRecord(record.relations),
+    createdAt: record.createdAt,
+    updatedAt: record.updatedAt,
+    inputHash: record.inputHash,
+  };
+}
+
+export const RelatedResourceInputRecordSchema = v.record(
+  RelationTypeSchema,
+  v.array(v.string()),
+);
+export type RelatedResourceInputRecord = v.InferOutput<
+  typeof RelatedResourceInputRecordSchema
+>;
+
+export function toRelatedResourceInputRecord(
+  relations: RelatedResourceInput[],
+): RelatedResourceInputRecord {
+  const record: RelatedResourceInputRecord = {};
+  for (const relation of relations) {
+    let array = record[relation.relationType];
+    if (!array) {
+      array = [];
+      record[relation.relationType] = array;
+    }
+    array.push(relation.id);
+  }
+  return record;
+}

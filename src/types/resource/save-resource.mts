@@ -1,6 +1,10 @@
 import * as vg from '../valibot-to-graphql.mjs';
-import {Resource, ResourceSchema} from './resource.mjs';
-import {ResourceInput, ResourceInputSchema} from './resource-input.mjs';
+import {
+  Resource,
+  ResourceInput,
+  ResourceInputSchema,
+  ResourceSchema,
+} from './resource.mjs';
 
 export const saveResource = vg.mutation<ResourceInput, Resource>(
   'saveResource',

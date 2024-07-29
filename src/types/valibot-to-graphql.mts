@@ -298,6 +298,11 @@ function toType(
     default:
       type = toScalarType(schema);
   }
+  if (type === undefined) {
+    throw new Error(
+      `Unable to find registry entry for a type of ${schema.type}`,
+    );
+  }
   return optional ? type : new GraphQLNonNull(type);
 }
 
@@ -316,7 +321,11 @@ export function toGraphQLObjectType<
     const name = typeSchema.name;
     const fields: ThunkObjMap<GraphQLFieldConfig<unknown, unknown>> = {};
     for (const entryKey in typeSchema.entries) {
-      fields[entryKey] = {type: toType(registry, typeSchema.entries[entryKey])};
+      if (entryKey !== '__typename') {
+        fields[entryKey] = {
+          type: toType(registry, typeSchema.entries[entryKey]),
+        };
+      }
     }
     const type = new GraphQLObjectType({
       name,

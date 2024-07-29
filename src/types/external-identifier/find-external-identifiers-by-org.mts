@@ -19,6 +19,7 @@ export type FindExternalIdentifiersByOrgOutput = v.InferOutput<
   typeof FindExternalIdentifiersByOrgOutputSchema
 >;
 
+// TODO Can we convert this to just return an array?
 export const findExternalIdentifiersByOrg = vg.query<
   FindExternalIdentifiersByOrgArgs,
   FindExternalIdentifiersByOrgOutput

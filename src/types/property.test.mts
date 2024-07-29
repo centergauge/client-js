@@ -8,21 +8,15 @@ import {
   isIntegerProperty,
   isStringArrayProperty,
   isStringProperty,
-  propertyInputsToRecord,
-  recordToProperties,
+  propertyRecordToProperties,
   toProperty,
+  propertyInputsToPropertyRecord,
 } from './property.mjs';
 
 test('Test isInteger', () => {
   expect(isInteger(1)).toBe(true);
   expect(isInteger(1.1)).toBe(false);
   expect(isInteger('1')).toBe(false);
-});
-
-test('Test isFloat', () => {
-  expect(isFloat(1)).toBe(false);
-  expect(isFloat(1.1)).toBe(true);
-  expect(isFloat('1')).toBe(false);
 });
 
 test('Test isStringProperty', () => {
@@ -56,11 +50,27 @@ test('Test isIntegerProperty', () => {
   expect(isIntegerProperty({key: 'key', integerValue: 1.1})).toBe(false);
 });
 
+test('Test isFloat', () => {
+  expect(isFloat(1)).toBe(false);
+  expect(isFloat(1.1)).toBe(true);
+  expect(isFloat('1')).toBe(false);
+});
+
 test('Test isFloatProperty', () => {
   expect(isFloatProperty({key: 'key', floatValue: '1'})).toBe(false);
   expect(isFloatProperty({key: 'key', floatValue: 1})).toBe(false);
   expect(isFloatProperty({key: 'key', floatValue: true})).toBe(false);
   expect(isFloatProperty({key: 'key', floatValue: 1.1})).toBe(true);
+});
+
+test('Test isProperty', () => {
+  expect(isIntegerProperty({key: 'key', integerValue: 1})).toBe(true);
+  expect(isFloatProperty({key: 'key', floatValue: 1.1})).toBe(true);
+  expect(isBooleanProperty({key: 'key', booleanValue: true})).toBe(true);
+  expect(isStringProperty({key: 'key', stringValue: 'value'})).toBe(true);
+  expect(isStringArrayProperty({key: 'key', stringValues: ['a', 'b']})).toBe(
+    true,
+  );
 });
 
 test('Test toProperty', () => {
@@ -77,20 +87,40 @@ test('Test toProperty', () => {
 });
 
 test('Test fromProperty', () => {
-  const prop1 = fromProperty({key: 'key', integerValue: 1});
+  const prop1 = fromProperty({
+    key: 'key',
+    integerValue: 1,
+    __typename: 'IntegerProperty',
+  });
   expect(prop1.type).toBe('integer');
-  const prop2 = fromProperty({key: 'key', floatValue: 1.1});
+  const prop2 = fromProperty({
+    key: 'key',
+    floatValue: 1.1,
+    __typename: 'FloatProperty',
+  });
   expect(prop2.type).toBe('float');
-  const prop3 = fromProperty({key: 'key', booleanValue: true});
+  const prop3 = fromProperty({
+    key: 'key',
+    booleanValue: true,
+    __typename: 'BooleanProperty',
+  });
   expect(prop3.type).toBe('boolean');
-  const prop4 = fromProperty({key: 'key', stringValue: 'value'});
+  const prop4 = fromProperty({
+    key: 'key',
+    stringValue: 'value',
+    __typename: 'StringProperty',
+  });
   expect(prop4.type).toBe('string');
-  const prop5 = fromProperty({key: 'key', stringValues: ['a', 'b']});
+  const prop5 = fromProperty({
+    key: 'key',
+    stringValues: ['a', 'b'],
+    __typename: 'StringArrayProperty',
+  });
   expect(prop5.type).toBe('string[]');
 });
 
-test('Test propertyInputsToRecord', () => {
-  const record = propertyInputsToRecord([
+test('Test toPropertyRecord', () => {
+  const record = propertyInputsToPropertyRecord([
     {key: 'stringKey', value: 'str', type: 'string'},
     {key: 'integerKey', value: '1', type: 'integer'},
     {key: 'floatKey', value: '1.1', type: 'float'},
@@ -104,13 +134,13 @@ test('Test propertyInputsToRecord', () => {
   expect(record['stringArrayKey']).toEqual(['a', 'b']);
 });
 
-test('Test recordToProperties', () => {
+test('Test propertiesToPropertyRecord', () => {
   const record: Record<string, string | number | boolean | string[]> = {};
   record['stringKey'] = 'str';
   record['integerKey'] = 1;
   record['floatKey'] = 1.1;
   record['booleanKey'] = true;
   record['stringArrayKey'] = ['a', 'b'];
-  const properties = recordToProperties(record);
+  const properties = propertyRecordToProperties(record);
   expect(properties.length).toBe(5);
 });

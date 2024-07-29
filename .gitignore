@@ -7,7 +7,7 @@ notes.txt
 node_modules
 dist
 !.prettierrc.js
-src/oneoff.test.ts
+src/one-off.test.ts
 site
 coverage
 schema.graphql
