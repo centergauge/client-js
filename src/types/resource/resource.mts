@@ -101,6 +101,14 @@ export const ResourceSchema = vg.type('Resource', {
 });
 export type Resource = v.InferOutput<typeof ResourceSchema>;
 
+export const EventRelatedResourceSchema = vg.type('EventRelatedResource', {
+  ...ResourceSchema.entries,
+  relationType: RelationTypeSchema,
+});
+export type EventRelatedResource = v.InferOutput<
+  typeof EventRelatedResourceSchema
+>;
+
 ///////////////////////////////////////////////////////////////////////////////
 // Resource Input Types
 //

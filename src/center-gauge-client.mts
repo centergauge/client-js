@@ -3,7 +3,7 @@ import {Amplify} from 'aws-amplify';
 import {generateClient, GraphQLResult} from 'aws-amplify/api';
 import {V6Client} from '@aws-amplify/api-graphql';
 import {ConsoleLogger} from 'aws-amplify/utils';
-import {SafeResult} from './types/index.mjs';
+import {EventRelatedResourceSchema, SafeResult} from './types/index.mjs';
 import {CenterGaugeClientError, isCenterGaugeClientError} from './errors.mjs';
 import {
   getIdentity,
@@ -256,6 +256,7 @@ export class CenterGaugeClient {
         RelatedResourceReferenceSchema,
         RelatedResourceProjectionSchema,
         ResourceSchema,
+        EventRelatedResourceSchema,
 
         AlertSchema,
       ],

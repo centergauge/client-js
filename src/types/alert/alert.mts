@@ -1,7 +1,7 @@
 import * as v from 'valibot';
 import * as vg from '../valibot-to-graphql.mjs';
 import {EventSchema} from '../event.mjs';
-import {RelatedResourceSchema} from '../resource/index.mjs';
+import {EventRelatedResourceSchema} from '../resource/index.mjs';
 
 export const AlertSeveritySchema = v.picklist(['warning', 'critical']);
 export type AlertSeverity = v.InferOutput<typeof AlertSeveritySchema>;
@@ -11,6 +11,7 @@ export type AlarmState = v.InferOutput<typeof AlarmStateSchema>;
 
 export const AlarmSignalSourceSchema = v.picklist([
   'cloudwatch',
+  'grafana',
   'opensearch',
   'prometheus',
 ]);
@@ -26,7 +27,7 @@ export const AlertSchema = vg.type('Alert', {
   alarmName: v.string(),
   alarmState: AlarmStateSchema,
   reason: v.optional(v.string()),
-  relations: v.array(RelatedResourceSchema),
+  relations: v.array(EventRelatedResourceSchema),
 });
 export type Alert = v.InferOutput<typeof AlertSchema>;
 
