@@ -11,10 +11,14 @@ import {
 import {OrgIdSchema} from '../org/index.mjs';
 
 export const RelationTypeSchema = v.picklist([
+  'created',
+  'createdBy',
   'contains',
   'containedIn',
   'uses',
   'usedBy',
+  // 'parentOf',
+  // 'childOf',
   'relatesTo',
 ]);
 export type RelationType = v.InferOutput<typeof RelationTypeSchema>;
