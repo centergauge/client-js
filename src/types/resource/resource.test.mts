@@ -130,8 +130,16 @@ test('Test isResourceInput', () => {
 test('Test toRelatedResourceReferenceRecord', () => {
   expect(
     toRelatedResourceReferenceRecord([
-      {id: '1', relationType: 'contains'},
-      {id: '2', relationType: 'contains'},
+      {
+        id: '1',
+        relationType: 'contains',
+        __typename: 'RelatedResourceReference',
+      },
+      {
+        id: '2',
+        relationType: 'contains',
+        __typename: 'RelatedResourceReference',
+      },
     ]),
   ).toEqual({
     contains: ['1', '2'],
@@ -144,8 +152,8 @@ test('Test fromRelatedResourceReferenceRecord', () => {
       contains: ['1', '2'],
     }),
   ).toEqual([
-    {id: '1', relationType: 'contains'},
-    {id: '2', relationType: 'contains'},
+    {id: '1', relationType: 'contains', __typename: 'RelatedResourceReference'},
+    {id: '2', relationType: 'contains', __typename: 'RelatedResourceReference'},
   ]);
 });
 
@@ -166,10 +174,12 @@ test('Test toRelatedResourceProjectionRecordValue', () => {
         {
           id: '2',
           relationType: 'contains',
+          __typename: 'RelatedResourceReference',
         },
       ],
       createdAt: date,
       updatedAt: date,
+      __typename: 'RelatedResourceProjection',
     }),
   ).toEqual({
     id: '1',
@@ -212,10 +222,12 @@ test('Test fromRelatedResourceProjectionRecordValue', () => {
       {
         id: '2',
         relationType: 'contains',
+        __typename: 'RelatedResourceReference',
       },
     ],
     createdAt: date,
     updatedAt: date,
+    __typename: 'RelatedResourceProjection',
   });
 });
 
@@ -237,10 +249,12 @@ test('Test toRelatedResourceProjectionRecord', () => {
           {
             id: '2',
             relationType: 'contains',
+            __typename: 'RelatedResourceReference',
           },
         ],
         createdAt: date,
         updatedAt: date,
+        __typename: 'RelatedResourceProjection',
       },
       {
         id: '2',
@@ -256,10 +270,12 @@ test('Test toRelatedResourceProjectionRecord', () => {
           {
             id: '1',
             relationType: 'contains',
+            __typename: 'RelatedResourceReference',
           },
         ],
         createdAt: date,
         updatedAt: date,
+        __typename: 'RelatedResourceProjection',
       },
     ]),
   ).toEqual({
@@ -334,10 +350,12 @@ test('Test fromRelatedResourceProjectRecord', () => {
         {
           id: '2',
           relationType: 'contains',
+          __typename: 'RelatedResourceReference',
         },
       ],
       createdAt: date,
       updatedAt: date,
+      __typename: 'RelatedResourceProjection',
     },
     {
       id: '2',
@@ -353,10 +371,12 @@ test('Test fromRelatedResourceProjectRecord', () => {
         {
           id: '1',
           relationType: 'contains',
+          __typename: 'RelatedResourceReference',
         },
       ],
       createdAt: date,
       updatedAt: date,
+      __typename: 'RelatedResourceProjection',
     },
   ]);
 });
@@ -372,10 +392,12 @@ test('Test toRelatedResourceRecord', () => {
         relations: [],
         createdAt: date,
         updatedAt: date,
+        __typename: 'RelatedResourceProjection',
       },
       {
         id: '2',
         relationType: 'contains',
+        __typename: 'RelatedResourceReference',
       },
     ]),
   ).toEqual({
@@ -412,10 +434,12 @@ test('Test fromRelatedResourceRecord', () => {
     {
       id: '1',
       relationType: 'contains',
+      __typename: 'RelatedResourceReference',
     },
     {
       id: '2',
       relationType: 'contains',
+      __typename: 'RelatedResourceReference',
     },
     {
       id: '1',
@@ -424,6 +448,7 @@ test('Test fromRelatedResourceRecord', () => {
       relations: [],
       createdAt: date,
       updatedAt: date,
+      __typename: 'RelatedResourceProjection',
     },
   ]);
 });
@@ -445,6 +470,7 @@ test('Test toResourceRecord', () => {
         {
           id: '2',
           relationType: 'contains',
+          __typename: 'RelatedResourceReference',
         },
       ],
       inputHash: 'hash',
@@ -496,6 +522,7 @@ test('Test fromResourceRecord', () => {
       {
         id: '2',
         relationType: 'contains',
+        __typename: 'RelatedResourceReference',
       },
     ],
     inputHash: 'hash',

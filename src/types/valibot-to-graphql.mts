@@ -512,11 +512,9 @@ function toGraphQLBlockString(
         str += `\n${indent}  ${key} {`;
         for (const option of entry.item.options) {
           if (isTypeSchema(option)) {
-            str += `\n${indent}    ... on ${option.name} {`;
-            for (const optionKey in option.entries) {
-              str += `\n${indent}      ${optionKey}`;
-            }
-            str += `\n${indent}    }`;
+            str +=
+              `\n${indent}    ... on ${option.name} ` +
+              toGraphQLBlockString(indent + '    ', option);
           } else {
             throw new Error('Schema in union is not a type');
           }
@@ -534,7 +532,6 @@ function toGraphQLBlockString(
         }
       }
     }
-    str += `\n${indent}  __typename`;
     str += `\n${indent}}`;
     return str;
   }

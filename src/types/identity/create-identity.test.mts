@@ -32,7 +32,6 @@ test('Test createIdentity', () => {
       '    email\n' +
       '    profilePicture\n' +
       '    roles\n' +
-      '    __typename\n' +
       '  }\n' +
       '}',
   );

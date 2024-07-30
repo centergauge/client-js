@@ -17,9 +17,7 @@ test('Test getIdentity', () => {
       '    assignments {\n' +
       '      orgId\n' +
       '      roles\n' +
-      '      __typename\n' +
       '    }\n' +
-      '    __typename\n' +
       '  }\n' +
       '}',
   );

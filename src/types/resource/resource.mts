@@ -13,12 +13,14 @@ import {OrgIdSchema} from '../org/index.mjs';
 export const RelationTypeSchema = v.picklist([
   'created',
   'createdBy',
+  'memberOf',
+  'member',
   'contains',
   'containedIn',
   'uses',
   'usedBy',
-  // 'parentOf',
-  // 'childOf',
+  'parentOf',
+  'childOf',
   'relatesTo',
 ]);
 export type RelationType = v.InferOutput<typeof RelationTypeSchema>;
@@ -28,6 +30,7 @@ export const RelatedResourceReferenceSchema = vg.type(
   {
     relationType: RelationTypeSchema,
     id: v.string(),
+    __typename: v.literal('RelatedResourceReference'),
   },
 );
 export type RelatedResourceReference = v.InferOutput<
@@ -53,6 +56,7 @@ export const RelatedResourceProjectionSchema = vg.type(
     relations: v.array(RelatedResourceReferenceSchema),
     createdAt: v.string(),
     updatedAt: v.string(),
+    __typename: v.literal('RelatedResourceProjection'),
   },
 );
 export type RelatedResourceProjection = v.InferOutput<
@@ -119,7 +123,7 @@ export function isRelatedResourceInput(o: unknown): o is RelatedResourceInput {
   return typeof r.id === 'string' && typeof r.relationType === 'string';
 }
 
-export const ResourceInputSchema = vg.input('CreateResourceInput', {
+export const ResourceInputSchema = vg.input('ResourceInput', {
   orgId: OrgIdSchema,
   id: v.string(),
   properties: v.array(PropertyInputSchema),
@@ -180,7 +184,11 @@ export function fromRelatedResourceReferenceRecord(
     const ids = record[relationType as RelationType];
     if (ids) {
       for (const id of ids) {
-        relations.push({id, relationType: relationType as RelationType});
+        relations.push({
+          id,
+          relationType: relationType as RelationType,
+          __typename: 'RelatedResourceReference',
+        });
       }
     }
   }
@@ -221,6 +229,7 @@ export function fromRelatedResourceProjectionRecordValue(
     relations: fromRelatedResourceReferenceRecord(value.relations),
     createdAt: value.createdAt,
     updatedAt: value.updatedAt,
+    __typename: 'RelatedResourceProjection',
   };
 }
 
@@ -307,6 +316,7 @@ export function fromRelatedResourceRecord(
           relations.push({
             id: value,
             relationType: relationType as RelationType,
+            __typename: 'RelatedResourceReference',
           });
         } else {
           relations.push(
