@@ -22,6 +22,8 @@ export const RelationTypeSchema = v.picklist([
   'parentOf',
   'childOf',
   'relatesTo',
+  'observes',
+  'observedBy',
 ]);
 export type RelationType = v.InferOutput<typeof RelationTypeSchema>;
 
@@ -108,6 +110,25 @@ export const EventRelatedResourceSchema = vg.type('EventRelatedResource', {
 export type EventRelatedResource = v.InferOutput<
   typeof EventRelatedResourceSchema
 >;
+
+export function resourceToRelatedResourceProjection(
+  relationType: RelationType,
+  resource: Resource,
+): RelatedResource {
+  return {
+    ...resource,
+    relationType,
+    properties: resource.properties,
+    relations: resource.relations.map((relation) => {
+      return {
+        id: relation.id,
+        relationType: relation.relationType,
+        __typename: 'RelatedResourceReference',
+      };
+    }),
+    __typename: 'RelatedResourceProjection',
+  };
+}
 
 ///////////////////////////////////////////////////////////////////////////////
 // Resource Input Types

@@ -6,6 +6,7 @@ import {OrgIdSchema} from '../org/index.mjs';
 export const GetResourceArgsSchema = v.object({
   orgId: OrgIdSchema,
   id: v.string(),
+  project: v.boolean(),
 });
 export type GetResourceArgs = v.InferInput<typeof GetResourceArgsSchema>;
 

@@ -93,5 +93,5 @@ test('Test saveResource', () => {
       '  }\n' +
       '}',
   );
-  console.log(mutation.query);
+  // console.log(mutation.query);
 });
