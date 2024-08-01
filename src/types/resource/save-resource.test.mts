@@ -7,6 +7,7 @@ test('Test saveResource', () => {
     orgId: 'test',
     properties: [],
     relations: [],
+    tags: [],
   });
   console.log(mutation.query);
   expect(mutation.query).toEqual(
@@ -41,6 +42,10 @@ test('Test saveResource', () => {
       '        __typename\n' +
       '      }\n' +
       '    }\n' +
+      '    tags {\n' +
+      '      key\n' +
+      '      value\n' +
+      '    }\n' +
       '    relations {\n' +
       '      ... on RelatedResourceProjection {\n' +
       '        id\n' +
@@ -71,6 +76,10 @@ test('Test saveResource', () => {
       '            stringValues\n' +
       '            __typename\n' +
       '          }\n' +
+      '        }\n' +
+      '        tags {\n' +
+      '          key\n' +
+      '          value\n' +
       '        }\n' +
       '        relations {\n' +
       '          relationType\n' +

@@ -8,4 +8,5 @@ export * from './identity-org-assignment/index.mjs';
 export * from './org/index.mjs';
 export * from './resource/index.mjs';
 export * from './safe-result.mjs';
+export * from './tag.mjs';
 export * from './valibot-to-graphql.mjs';

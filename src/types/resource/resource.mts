@@ -9,6 +9,14 @@ import {
   propertyRecordToProperties,
 } from '../property.mjs';
 import {OrgIdSchema} from '../org/index.mjs';
+import {
+  isTag,
+  TagInputSchema,
+  TagRecordSchema,
+  tagRecordToTags,
+  TagSchema,
+  tagsToTagRecord,
+} from '../tag.mjs';
 
 export const RelationTypeSchema = v.picklist([
   'created',
@@ -55,6 +63,7 @@ export const RelatedResourceProjectionSchema = vg.type(
     id: v.string(),
     relationType: RelationTypeSchema,
     properties: v.array(PropertySchema),
+    tags: v.array(TagSchema),
     relations: v.array(RelatedResourceReferenceSchema),
     createdAt: v.string(),
     updatedAt: v.string(),
@@ -77,6 +86,8 @@ export function isRelatedResourceProjection(
     typeof p.relationType === 'string' &&
     Array.isArray(p.properties) &&
     p.properties.every((property: unknown) => isProperty(property)) &&
+    Array.isArray(p.tags) &&
+    p.tags.every((tag: unknown) => isTag(tag)) &&
     Array.isArray(p.relations) &&
     p.relations.every((relation: unknown) =>
       isRelatedResourceReference(relation),
@@ -96,6 +107,7 @@ export const ResourceSchema = vg.type('Resource', {
   orgId: OrgIdSchema,
   id: v.string(),
   properties: v.array(PropertySchema),
+  tags: v.array(TagSchema),
   relations: v.array(RelatedResourceSchema),
   createdAt: v.string(),
   updatedAt: v.string(),
@@ -114,11 +126,10 @@ export type EventRelatedResource = v.InferOutput<
 export function resourceToRelatedResourceProjection(
   relationType: RelationType,
   resource: Resource,
-): RelatedResource {
+): RelatedResourceProjection {
   return {
     ...resource,
     relationType,
-    properties: resource.properties,
     relations: resource.relations.map((relation) => {
       return {
         id: relation.id,
@@ -156,6 +167,7 @@ export const ResourceInputSchema = vg.input('ResourceInput', {
   orgId: OrgIdSchema,
   id: v.string(),
   properties: v.array(PropertyInputSchema),
+  tags: v.array(TagInputSchema),
   relations: v.array(RelatedResourceInputSchema),
 });
 export type ResourceInput = v.InferInput<typeof ResourceInputSchema>;
@@ -170,6 +182,7 @@ export function isResourceInput(o: unknown): o is ResourceInput {
     typeof r.id === 'string' &&
     Array.isArray(r.properties) &&
     r.properties.every((property: unknown) => isProperty(property)) &&
+    // TODO
     Array.isArray(r.relations) &&
     r.relations.every((relation: unknown) => isRelatedResourceInput(relation))
   );
@@ -227,6 +240,7 @@ export function fromRelatedResourceReferenceRecord(
 export const RelatedResourceProjectionRecordValueSchema = v.object({
   id: v.string(),
   properties: PropertyRecordSchema,
+  tags: TagRecordSchema,
   relations: RelatedResourceReferenceRecordSchema,
   createdAt: v.string(),
   updatedAt: v.string(),
@@ -241,6 +255,7 @@ export function toRelatedResourceProjectionRecordValue(
   return {
     id: relation.id,
     properties: propertiesToPropertyRecord(relation.properties),
+    tags: tagsToTagRecord(relation.tags),
     relations: toRelatedResourceReferenceRecord(relation.relations),
     createdAt: relation.createdAt,
     updatedAt: relation.updatedAt,
@@ -255,6 +270,7 @@ export function fromRelatedResourceProjectionRecordValue(
     id: value.id,
     relationType,
     properties: propertyRecordToProperties(value.properties),
+    tags: tagRecordToTags(value.tags),
     relations: fromRelatedResourceReferenceRecord(value.relations),
     createdAt: value.createdAt,
     updatedAt: value.updatedAt,
@@ -365,6 +381,7 @@ export const ResourceRecordSchema = v.object({
   orgId: OrgIdSchema,
   id: v.string(),
   properties: PropertyRecordSchema,
+  tags: TagRecordSchema,
   relations: RelatedResourceRecordSchema,
   createdAt: v.string(),
   updatedAt: v.string(),
@@ -377,6 +394,7 @@ export function toResourceRecord(resource: Resource): ResourceRecord {
     orgId: resource.orgId,
     id: resource.id,
     properties: propertiesToPropertyRecord(resource.properties),
+    tags: tagsToTagRecord(resource.tags),
     relations: toRelatedResourceRecord(resource.relations),
     createdAt: resource.createdAt,
     updatedAt: resource.updatedAt,
@@ -389,6 +407,7 @@ export function fromResourceRecord(record: ResourceRecord): Resource {
     orgId: record.orgId,
     id: record.id,
     properties: propertyRecordToProperties(record.properties),
+    tags: tagRecordToTags(record.tags),
     relations: fromRelatedResourceRecord(record.relations),
     createdAt: record.createdAt,
     updatedAt: record.updatedAt,

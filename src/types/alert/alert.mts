@@ -3,7 +3,11 @@ import * as vg from '../valibot-to-graphql.mjs';
 import {EventSchema} from '../event.mjs';
 import {EventRelatedResourceSchema} from '../resource/index.mjs';
 
-export const AlertSeveritySchema = v.picklist(['warning', 'critical']);
+export const AlertSeveritySchema = v.picklist([
+  'warning',
+  'critical',
+  'unknown',
+]);
 export type AlertSeverity = v.InferOutput<typeof AlertSeveritySchema>;
 
 export const AlarmStateSchema = v.picklist(['opened', 'closed']);

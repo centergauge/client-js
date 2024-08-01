@@ -63,6 +63,7 @@ import {
   RelatedResourceProjectionSchema,
   RelatedResourceSchema,
 } from './types/index.mjs';
+import {TagInputSchema, TagSchema} from './types/tag.mjs';
 
 export interface ClientCredentialsConfig {
   readonly clientId: string | Promise<string>;
@@ -231,6 +232,8 @@ export class CenterGaugeClient {
         IntegerPropertySchema,
         StringArrayPropertySchema,
 
+        TagSchema,
+
         OrgSchema,
         OrgAssignmentSchema,
         GetOrgOutputSchema,
@@ -262,6 +265,7 @@ export class CenterGaugeClient {
       ],
       inputs: [
         PropertyInputSchema,
+        TagInputSchema,
 
         CreateOrgInputSchema,
         UpdateOrgInputSchema,

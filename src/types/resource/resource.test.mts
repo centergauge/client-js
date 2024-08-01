@@ -47,6 +47,7 @@ test('Test isRelatedResourceProjection', () => {
           relationType: 'contains',
         },
       ],
+      tags: [],
       createdAt: date,
       updatedAt: date,
     }),
@@ -57,6 +58,7 @@ test('Test isRelatedResourceProjection', () => {
       relationType: 'contains',
       properties: [],
       relations: [],
+      tags: [],
       createdAt: date,
       updatedAt: date,
     }),
@@ -98,6 +100,7 @@ test('Test isResourceInput', () => {
           stringValue: 'John',
         },
       ],
+      tags: [],
       relations: [
         {
           id: '2',
@@ -111,6 +114,7 @@ test('Test isResourceInput', () => {
       orgId: '1',
       id: '1',
       properties: [],
+      tags: [],
       relations: [],
     }),
   ).toBe(true);
@@ -120,6 +124,7 @@ test('Test isResourceInput', () => {
       id: '1',
       properties: undefined,
       relations: undefined,
+      tags: undefined,
     }),
   ).toBe(false);
   expect(isResourceInput({})).toBe(false);
@@ -177,6 +182,7 @@ test('Test toRelatedResourceProjectionRecordValue', () => {
           __typename: 'RelatedResourceReference',
         },
       ],
+      tags: [],
       createdAt: date,
       updatedAt: date,
       __typename: 'RelatedResourceProjection',
@@ -189,6 +195,7 @@ test('Test toRelatedResourceProjectionRecordValue', () => {
     relations: {
       contains: ['2'],
     },
+    tags: {},
     createdAt: date,
     updatedAt: date,
   });
@@ -205,6 +212,7 @@ test('Test fromRelatedResourceProjectionRecordValue', () => {
       relations: {
         contains: ['2'],
       },
+      tags: {},
       createdAt: date,
       updatedAt: date,
     }),
@@ -225,6 +233,7 @@ test('Test fromRelatedResourceProjectionRecordValue', () => {
         __typename: 'RelatedResourceReference',
       },
     ],
+    tags: [],
     createdAt: date,
     updatedAt: date,
     __typename: 'RelatedResourceProjection',
@@ -252,6 +261,7 @@ test('Test toRelatedResourceProjectionRecord', () => {
             __typename: 'RelatedResourceReference',
           },
         ],
+        tags: [],
         createdAt: date,
         updatedAt: date,
         __typename: 'RelatedResourceProjection',
@@ -266,6 +276,7 @@ test('Test toRelatedResourceProjectionRecord', () => {
             __typename: 'StringProperty',
           },
         ],
+        tags: [],
         relations: [
           {
             id: '1',
@@ -288,6 +299,7 @@ test('Test toRelatedResourceProjectionRecord', () => {
         relations: {
           contains: ['2'],
         },
+        tags: {},
         createdAt: date,
         updatedAt: date,
       },
@@ -299,6 +311,7 @@ test('Test toRelatedResourceProjectionRecord', () => {
         relations: {
           contains: ['1'],
         },
+        tags: {},
         createdAt: date,
         updatedAt: date,
       },
@@ -319,6 +332,7 @@ test('Test fromRelatedResourceProjectRecord', () => {
           relations: {
             contains: ['2'],
           },
+          tags: {},
           createdAt: date,
           updatedAt: date,
         },
@@ -330,6 +344,7 @@ test('Test fromRelatedResourceProjectRecord', () => {
           relations: {
             contains: ['1'],
           },
+          tags: {},
           createdAt: date,
           updatedAt: date,
         },
@@ -353,6 +368,7 @@ test('Test fromRelatedResourceProjectRecord', () => {
           __typename: 'RelatedResourceReference',
         },
       ],
+      tags: [],
       createdAt: date,
       updatedAt: date,
       __typename: 'RelatedResourceProjection',
@@ -374,6 +390,7 @@ test('Test fromRelatedResourceProjectRecord', () => {
           __typename: 'RelatedResourceReference',
         },
       ],
+      tags: [],
       createdAt: date,
       updatedAt: date,
       __typename: 'RelatedResourceProjection',
@@ -390,6 +407,7 @@ test('Test toRelatedResourceRecord', () => {
         relationType: 'contains',
         properties: [],
         relations: [],
+        tags: [],
         createdAt: date,
         updatedAt: date,
         __typename: 'RelatedResourceProjection',
@@ -406,6 +424,7 @@ test('Test toRelatedResourceRecord', () => {
         id: '1',
         properties: {},
         relations: {},
+        tags: {},
         createdAt: date,
         updatedAt: date,
       },
@@ -425,6 +444,7 @@ test('Test fromRelatedResourceRecord', () => {
           id: '1',
           properties: {},
           relations: {},
+          tags: {},
           createdAt: date,
           updatedAt: date,
         },
@@ -446,6 +466,7 @@ test('Test fromRelatedResourceRecord', () => {
       relationType: 'contains',
       properties: [],
       relations: [],
+      tags: [],
       createdAt: date,
       updatedAt: date,
       __typename: 'RelatedResourceProjection',
@@ -473,6 +494,7 @@ test('Test toResourceRecord', () => {
           __typename: 'RelatedResourceReference',
         },
       ],
+      tags: [],
       inputHash: 'hash',
       createdAt: date,
       updatedAt: date,
@@ -486,6 +508,7 @@ test('Test toResourceRecord', () => {
     relations: {
       contains: ['2'],
     },
+    tags: {},
     inputHash: 'hash',
     createdAt: date,
     updatedAt: date,
@@ -504,6 +527,7 @@ test('Test fromResourceRecord', () => {
       relations: {
         contains: ['2'],
       },
+      tags: {},
       inputHash: 'hash',
       createdAt: date,
       updatedAt: date,
@@ -525,6 +549,7 @@ test('Test fromResourceRecord', () => {
         __typename: 'RelatedResourceReference',
       },
     ],
+    tags: [],
     inputHash: 'hash',
     createdAt: date,
     updatedAt: date,
