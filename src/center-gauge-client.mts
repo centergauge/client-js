@@ -64,8 +64,18 @@ import {
   RelatedResourceSchema,
 } from './types/index.mjs';
 import {TagInputSchema, TagSchema} from './types/tag.mjs';
-import {WebhookSchema} from './types/notification/index.mjs';
-import {EventRouterSchema} from './types/notification/event-router.mjs';
+import {
+  CreateEventRouterInputSchema,
+  updateEventRouter,
+  WebhookSchema,
+  EventRouterSchema,
+  createEventRouter,
+  createWebhook,
+  CreateWebhookInputSchema,
+  updateWebhook,
+  UpdateWebhookInputSchema,
+  UpdateEventRouterInputSchema,
+} from './types/notification/index.mjs';
 
 export interface ClientCredentialsConfig {
   readonly clientId: string | Promise<string>;
@@ -286,6 +296,11 @@ export class CenterGaugeClient {
 
         RelatedResourceInputSchema,
         ResourceInputSchema,
+
+        CreateWebhookInputSchema,
+        UpdateWebhookInputSchema,
+        CreateEventRouterInputSchema,
+        UpdateEventRouterInputSchema,
       ],
       unions: [PropertySchema, RelatedResourceSchema],
       queries: [
@@ -306,6 +321,10 @@ export class CenterGaugeClient {
         createIdentityAutoMapping,
         createAlert,
         saveResource,
+        createWebhook,
+        updateWebhook,
+        createEventRouter,
+        updateEventRouter,
       ],
     });
   }
