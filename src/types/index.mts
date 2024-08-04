@@ -2,6 +2,7 @@ export * from './alert/index.mjs';
 export * from './event.mjs';
 export * from './property.mjs';
 export * from './external-identifier/index.mjs';
+export * from './id.mjs';
 export * from './identity/index.mjs';
 export * from './identity-auto-mapping/index.mjs';
 export * from './identity-org-assignment/index.mjs';

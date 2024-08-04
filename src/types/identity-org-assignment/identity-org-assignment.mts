@@ -1,10 +1,10 @@
 import * as v from 'valibot';
 import * as vg from '../valibot-to-graphql.mjs';
-import {OrgIdSchema} from '../org/index.mjs';
 import {IdentityIdSchema, OrgRoleSchema} from '../identity/index.mjs';
+import {IdSchema} from '../id.mjs';
 
 export const IdentityOrgAssignmentSchema = vg.type('IdentityAssignment', {
-  orgId: OrgIdSchema,
+  orgId: IdSchema,
   identityId: IdentityIdSchema,
   roles: v.array(OrgRoleSchema),
 });

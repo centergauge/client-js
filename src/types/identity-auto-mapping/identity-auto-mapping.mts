@@ -1,9 +1,9 @@
 import * as v from 'valibot';
 import * as vg from '../valibot-to-graphql.mjs';
-import {OrgIdSchema} from '../org/index.mjs';
+import {IdSchema} from '../id.mjs';
 
 export const IdentityAutoMappingSchema = vg.type('IdentityAutoMapping', {
-  orgId: OrgIdSchema,
+  orgId: IdSchema,
   domain: v.pipe(v.string(), v.maxLength(253)),
 });
 

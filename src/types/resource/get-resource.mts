@@ -1,10 +1,10 @@
 import * as v from 'valibot';
 import * as vg from '../valibot-to-graphql.mjs';
 import {Resource, ResourceSchema} from './resource.mjs';
-import {OrgIdSchema} from '../org/index.mjs';
+import {IdSchema} from '../id.mjs';
 
 export const GetResourceArgsSchema = v.object({
-  orgId: OrgIdSchema,
+  orgId: IdSchema,
   id: v.string(),
   project: v.boolean(),
 });

@@ -8,7 +8,6 @@ import {
   PropertySchema,
   propertyRecordToProperties,
 } from '../property.mjs';
-import {OrgIdSchema} from '../org/index.mjs';
 import {
   isTag,
   TagInputSchema,
@@ -17,6 +16,7 @@ import {
   TagSchema,
   tagsToTagRecord,
 } from '../tag.mjs';
+import {IdSchema} from '../id.mjs';
 
 export const RelationTypeSchema = v.picklist([
   'created',
@@ -104,7 +104,7 @@ export const RelatedResourceSchema = vg.union('RelatedResource', [
 export type RelatedResource = v.InferOutput<typeof RelatedResourceSchema>;
 
 export const ResourceSchema = vg.type('Resource', {
-  orgId: OrgIdSchema,
+  orgId: IdSchema,
   id: v.string(),
   properties: v.array(PropertySchema),
   tags: v.array(TagSchema),
@@ -164,7 +164,7 @@ export function isRelatedResourceInput(o: unknown): o is RelatedResourceInput {
 }
 
 export const ResourceInputSchema = vg.input('ResourceInput', {
-  orgId: OrgIdSchema,
+  orgId: IdSchema,
   id: v.string(),
   properties: v.array(PropertyInputSchema),
   tags: v.array(TagInputSchema),
@@ -378,7 +378,7 @@ export function fromRelatedResourceRecord(
 }
 
 export const ResourceRecordSchema = v.object({
-  orgId: OrgIdSchema,
+  orgId: IdSchema,
   id: v.string(),
   properties: PropertyRecordSchema,
   tags: TagRecordSchema,

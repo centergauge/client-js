@@ -1,9 +1,10 @@
 import * as v from 'valibot';
 import * as vg from '../valibot-to-graphql.mjs';
-import {OrgIdSchema, OrgNameSchema, OrgSchema, SlugSchema} from './org.mjs';
+import {OrgNameSchema, OrgSchema, SlugSchema} from './org.mjs';
+import {IdSchema} from '../id.mjs';
 
 export const CreateOrgInputSchema = vg.input('CreateOrgInput', {
-  id: OrgIdSchema,
+  id: IdSchema,
   slug: SlugSchema,
   name: OrgNameSchema,
 });
