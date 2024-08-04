@@ -64,7 +64,8 @@ import {
   RelatedResourceSchema,
 } from './types/index.mjs';
 import {TagInputSchema, TagSchema} from './types/tag.mjs';
-import {WebhookNotificationChannelSchema} from './types/notification/index.mjs';
+import {WebhookSchema} from './types/notification/index.mjs';
+import {EventRouterSchema} from './types/notification/event-router.mjs';
 
 export interface ClientCredentialsConfig {
   readonly clientId: string | Promise<string>;
@@ -264,7 +265,8 @@ export class CenterGaugeClient {
 
         AlertSchema,
 
-        WebhookNotificationChannelSchema,
+        EventRouterSchema,
+        WebhookSchema,
       ],
       inputs: [
         PropertyInputSchema,
