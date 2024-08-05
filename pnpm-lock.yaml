@@ -24,8 +24,8 @@ importers:
         specifier: ^16.9.0
         version: 16.9.0
       valibot:
-        specifier: ^0.35.0
-        version: 0.35.0
+        specifier: ^0.37.0
+        version: 0.37.0(typescript@5.4.5)
     devDependencies:
       '@eslint/js':
         specifier: ^8.57.0
@@ -1618,8 +1618,13 @@ packages:
     resolution: {integrity: sha512-b+1eJOlsR9K8HJpow9Ok3fiWOWSIcIzXodvv0rQjVoOVNpWMpxf1wZNpt4y9h10odCNrqnYp1OBzRktckBe3sA==}
     hasBin: true
 
-  valibot@0.35.0:
-    resolution: {integrity: sha512-+i2aCRkReTrd5KBN/dW2BrPOvFnU5LXTV2xjZnjnqUIO8YUx6P2+MgRrkwF2FhkexgyKq/NIZdPdknhHf5A/Ww==}
+  valibot@0.37.0:
+    resolution: {integrity: sha512-FQz52I8RXgFgOHym3XHYSREbNtkgSjF9prvMFH1nBsRyfL6SfCzoT1GuSDTlbsuPubM7/6Kbw0ZMQb8A+V+VsQ==}
+    peerDependencies:
+      typescript: '>=5'
+    peerDependenciesMeta:
+      typescript:
+        optional: true
 
   vite-node@1.6.0:
     resolution: {integrity: sha512-de6HJgzC+TFzOu0NTC4RAIsyf/DY/ibWDYQUcuEA84EMHhcefTUGkjFHKKEJhQN4A+6I0u++kr3l36ZF2d7XRw==}
@@ -3670,7 +3675,9 @@ snapshots:
 
   uuid@9.0.1: {}
 
-  valibot@0.35.0: {}
+  valibot@0.37.0(typescript@5.4.5):
+    optionalDependencies:
+      typescript: 5.4.5
 
   vite-node@1.6.0(@types/node@20.14.10):
     dependencies:
