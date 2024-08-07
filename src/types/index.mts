@@ -1,5 +1,6 @@
 export * from './alert/index.mjs';
 export * from './event.mjs';
+export * from './event-router/index.mjs';
 export * from './property.mjs';
 export * from './external-identifier/index.mjs';
 export * from './id.mjs';
@@ -11,3 +12,4 @@ export * from './resource/index.mjs';
 export * from './safe-result.mjs';
 export * from './tag.mjs';
 export * from './valibot-to-graphql.mjs';
+export * from './webhook/index.mjs';

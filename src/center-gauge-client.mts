@@ -3,7 +3,12 @@ import {Amplify} from 'aws-amplify';
 import {generateClient, GraphQLResult} from 'aws-amplify/api';
 import {V6Client} from '@aws-amplify/api-graphql';
 import {ConsoleLogger} from 'aws-amplify/utils';
-import {EventRelatedResourceSchema, SafeResult} from './types/index.mjs';
+import {
+  EventRelatedResourceSchema,
+  ListEventRouterOutputSchema,
+  ListWebhookOutputSchema,
+  SafeResult,
+} from './types/index.mjs';
 import {CenterGaugeClientError, isCenterGaugeClientError} from './errors.mjs';
 import {
   getIdentity,
@@ -62,9 +67,6 @@ import {
   RelatedResourceReferenceSchema,
   RelatedResourceProjectionSchema,
   RelatedResourceSchema,
-} from './types/index.mjs';
-import {TagInputSchema, TagSchema} from './types/tag.mjs';
-import {
   CreateEventRouterInputSchema,
   updateEventRouter,
   WebhookSchema,
@@ -75,7 +77,10 @@ import {
   updateWebhook,
   UpdateWebhookInputSchema,
   UpdateEventRouterInputSchema,
-} from './types/notification/index.mjs';
+  listWebhook,
+  listEventRouter,
+} from './types/index.mjs';
+import {TagInputSchema, TagSchema} from './types/tag.mjs';
 
 export interface ClientCredentialsConfig {
   readonly clientId: string | Promise<string>;
@@ -275,8 +280,10 @@ export class CenterGaugeClient {
 
         AlertSchema,
 
-        EventRouterSchema,
         WebhookSchema,
+        ListWebhookOutputSchema,
+        EventRouterSchema,
+        ListEventRouterOutputSchema,
       ],
       inputs: [
         PropertyInputSchema,
@@ -311,6 +318,8 @@ export class CenterGaugeClient {
         getExternalIdentifier,
         findExternalIdentifiersByOrg,
         getResource,
+        listWebhook,
+        listEventRouter,
       ],
       mutations: [
         createOrg,

@@ -7,7 +7,7 @@ import {
   EventRouterTypeSchema,
 } from './event-router.mjs';
 
-export const CreateEventRouterInputSchema = vg.input('CreateEventRouter', {
+export const CreateEventRouterInputSchema = vg.input('CreateEventRouterInput', {
   orgId: IdSchema,
   name: v.string(),
   type: EventRouterTypeSchema,
