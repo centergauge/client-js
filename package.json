@@ -45,7 +45,7 @@
     "@aws-amplify/api-graphql": "^4.1.6",
     "cookie": "^0.6.0",
     "graphql": "^16.9.0",
-    "valibot": "^0.35.0"
+    "valibot": "^0.37.0"
   },
   "peerDependencies": {
     "@authsure/flow-client": "^0.0.4",
