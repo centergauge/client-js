@@ -60,7 +60,7 @@ import {
   PropertyInputSchema,
   RelatedResourceInputSchema,
   ResourceInputSchema,
-  AlertInputSchema,
+  CreateAlertInputSchema,
   StringArrayPropertySchema,
   RelatedResourceReferenceSchema,
   RelatedResourceProjectionSchema,
@@ -318,7 +318,7 @@ export class CenterGaugeClient {
 
         CreateIdentityAutoMappingInputSchema,
 
-        AlertInputSchema,
+        CreateAlertInputSchema,
 
         RelatedResourceInputSchema,
         ResourceInputSchema,
