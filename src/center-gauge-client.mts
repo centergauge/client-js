@@ -83,8 +83,6 @@ import {
   AddIncidentAlertInputSchema,
   AddIncidentResourceInputSchema,
   CreateIncidentInputSchema,
-  GetIncidentArgsSchema,
-  ListIncidentArgsSchema,
   MergeIncidentInputSchema,
   RemoveIncidentAlertInputSchema,
   UpdateIncidentInputSchema,
@@ -97,7 +95,6 @@ import {
   removeIncidentResource,
   removeIncidentAlert,
   updateIncident,
-  ListIncidentOutput,
   ListIncidentOutputSchema,
 } from './types/index.mjs';
 
