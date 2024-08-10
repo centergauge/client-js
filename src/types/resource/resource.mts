@@ -169,6 +169,7 @@ export const ResourceInputSchema = vg.input('ResourceInput', {
   properties: v.array(PropertyInputSchema),
   tags: v.array(TagInputSchema),
   relations: v.array(RelatedResourceInputSchema),
+  // TODO Need to allow projection on output
 });
 export type ResourceInput = v.InferInput<typeof ResourceInputSchema>;
 

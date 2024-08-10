@@ -3,14 +3,12 @@ import {Amplify} from 'aws-amplify';
 import {generateClient, GraphQLResult} from 'aws-amplify/api';
 import {V6Client} from '@aws-amplify/api-graphql';
 import {ConsoleLogger} from 'aws-amplify/utils';
+import {CenterGaugeClientError, isCenterGaugeClientError} from './errors.mjs';
 import {
   EventRelatedResourceSchema,
   ListEventRouterOutputSchema,
   ListWebhookOutputSchema,
   SafeResult,
-} from './types/index.mjs';
-import {CenterGaugeClientError, isCenterGaugeClientError} from './errors.mjs';
-import {
   getIdentity,
   GetIdentityOutputSchema,
   IdentitySchema,
@@ -79,8 +77,29 @@ import {
   UpdateEventRouterInputSchema,
   listWebhook,
   listEventRouter,
+  TagInputSchema,
+  TagSchema,
+  IncidentSchema,
+  AddIncidentAlertInputSchema,
+  AddIncidentResourceInputSchema,
+  CreateIncidentInputSchema,
+  GetIncidentArgsSchema,
+  ListIncidentArgsSchema,
+  MergeIncidentInputSchema,
+  RemoveIncidentAlertInputSchema,
+  UpdateIncidentInputSchema,
+  getIncident,
+  listIncident,
+  addIncidentAlert,
+  addIncidentResource,
+  createIncident,
+  mergeIncident,
+  removeIncidentResource,
+  removeIncidentAlert,
+  updateIncident,
+  ListIncidentOutput,
+  ListIncidentOutputSchema,
 } from './types/index.mjs';
-import {TagInputSchema, TagSchema} from './types/tag.mjs';
 
 export interface ClientCredentialsConfig {
   readonly clientId: string | Promise<string>;
@@ -284,6 +303,9 @@ export class CenterGaugeClient {
         ListWebhookOutputSchema,
         EventRouterSchema,
         ListEventRouterOutputSchema,
+
+        IncidentSchema,
+        ListIncidentOutputSchema,
       ],
       inputs: [
         PropertyInputSchema,
@@ -308,6 +330,14 @@ export class CenterGaugeClient {
         UpdateWebhookInputSchema,
         CreateEventRouterInputSchema,
         UpdateEventRouterInputSchema,
+
+        AddIncidentAlertInputSchema,
+        AddIncidentResourceInputSchema,
+        CreateIncidentInputSchema,
+        MergeIncidentInputSchema,
+        RemoveIncidentAlertInputSchema,
+        RemoveIncidentAlertInputSchema,
+        UpdateIncidentInputSchema,
       ],
       unions: [PropertySchema, RelatedResourceSchema],
       queries: [
@@ -320,6 +350,8 @@ export class CenterGaugeClient {
         getResource,
         listWebhook,
         listEventRouter,
+        getIncident,
+        listIncident,
       ],
       mutations: [
         createOrg,
@@ -334,6 +366,13 @@ export class CenterGaugeClient {
         updateWebhook,
         createEventRouter,
         updateEventRouter,
+        addIncidentAlert,
+        addIncidentResource,
+        createIncident,
+        mergeIncident,
+        removeIncidentAlert,
+        removeIncidentResource,
+        updateIncident,
       ],
     });
   }
