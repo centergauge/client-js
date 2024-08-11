@@ -4,6 +4,7 @@ import {IdSchema} from '../id.mjs';
 import {Alert, AlertSchema} from './alert.mjs';
 
 export const GetAlertArgsSchema = v.object({
+  orgId: IdSchema,
   id: IdSchema,
   project: v.boolean(),
 });
