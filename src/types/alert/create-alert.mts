@@ -21,6 +21,7 @@ export const CreateAlertInputSchema = vg.input('CreateAlertInput', {
   alarmState: AlarmStateSchema,
   reason: v.optional(v.string()),
   relations: v.array(RelatedResourceInputSchema),
+  event: v.string(),
 });
 export type CreateAlertInput = v.InferInput<typeof CreateAlertInputSchema>;
 

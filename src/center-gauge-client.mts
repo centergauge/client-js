@@ -96,6 +96,9 @@ import {
   removeIncidentAlert,
   updateIncident,
   ListIncidentOutputSchema,
+  getAlert,
+  listAlert,
+  ListAlertOutputSchema,
 } from './types/index.mjs';
 
 export interface ClientCredentialsConfig {
@@ -295,6 +298,7 @@ export class CenterGaugeClient {
         EventRelatedResourceSchema,
 
         AlertSchema,
+        ListAlertOutputSchema,
 
         WebhookSchema,
         ListWebhookOutputSchema,
@@ -347,6 +351,8 @@ export class CenterGaugeClient {
         getResource,
         listWebhook,
         listEventRouter,
+        getAlert,
+        listAlert,
         getIncident,
         listIncident,
       ],

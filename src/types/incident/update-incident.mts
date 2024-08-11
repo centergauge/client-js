@@ -8,6 +8,7 @@ import {
   IncidentStatusSchema,
   UrgencyRatingSchema,
 } from './incident.mjs';
+
 export const UpdateIncidentInputSchema = vg.input('UpdateIncidentInput', {
   id: IdSchema,
   orgId: IdSchema,

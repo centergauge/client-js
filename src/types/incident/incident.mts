@@ -2,9 +2,9 @@ import * as v from 'valibot';
 import * as vg from '../valibot-to-graphql.mjs';
 import {IdSchema} from '../id.mjs';
 import {AlertSchema} from '../alert/index.mjs';
-import {EventRelatedResourceSchema} from '../resource/index.mjs';
+import {ResourceSchema} from '../resource/index.mjs';
 
-/*
+/**
   Impact: Impact is the measure of the potential damage the incident can cause. It's usually categorized as:
 
   High: Affects a large number of users, a whole department, or the entire organization. It may also affect critical business processes.
@@ -14,7 +14,7 @@ import {EventRelatedResourceSchema} from '../resource/index.mjs';
 export const ImpactRatingSchema = v.picklist(['high', 'medium', 'low']);
 export type ImpactRating = v.InferOutput<typeof ImpactRatingSchema>;
 
-/*
+/**
   Urgency: Urgency is the measure of how quickly an incident needs to be resolved. It's usually categorized as:
 
   High: Needs immediate attention and resolution.
@@ -24,7 +24,7 @@ export type ImpactRating = v.InferOutput<typeof ImpactRatingSchema>;
 export const UrgencyRatingSchema = v.picklist(['high', 'medium', 'low']);
 export type UrgencyRating = v.InferOutput<typeof UrgencyRatingSchema>;
 
-/*
+/**
   Priority: Priority is a calculated measure that combines Impact and Urgency to determine the order in which incidents should be resolved. It's usually categorized as:
 
   P1 (Critical): High Impact and High Urgency incidents.
@@ -63,7 +63,7 @@ export const IncidentSchema = vg.type('Incident', {
   urgency: UrgencyRatingSchema,
   priority: PriorityRatingSchema,
   alerts: v.array(AlertSchema),
-  relations: v.array(EventRelatedResourceSchema),
+  resources: v.array(ResourceSchema),
   createdAt: v.number(),
 });
 export type Incident = v.InferOutput<typeof IncidentSchema>;
