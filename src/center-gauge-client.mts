@@ -5,7 +5,6 @@ import {V6Client} from '@aws-amplify/api-graphql';
 import {ConsoleLogger} from 'aws-amplify/utils';
 import {CenterGaugeClientError, isCenterGaugeClientError} from './errors.mjs';
 import {
-  EventRelatedResourceSchema,
   ListEventRouterOutputSchema,
   ListWebhookOutputSchema,
   SafeResult,
@@ -295,7 +294,6 @@ export class CenterGaugeClient {
         RelatedResourceReferenceSchema,
         RelatedResourceProjectionSchema,
         ResourceSchema,
-        EventRelatedResourceSchema,
 
         AlertSchema,
         ListAlertOutputSchema,

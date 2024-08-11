@@ -10,7 +10,6 @@ import {
 import {RelatedResourceInputSchema} from '../resource/index.mjs';
 
 export const CreateAlertInputSchema = vg.input('CreateAlertInput', {
-  id: v.string(),
   orgId: v.string(),
   orgName: v.string(),
   severity: AlertSeveritySchema,
@@ -21,7 +20,7 @@ export const CreateAlertInputSchema = vg.input('CreateAlertInput', {
   alarmState: AlarmStateSchema,
   reason: v.optional(v.string()),
   relations: v.array(RelatedResourceInputSchema),
-  event: v.string(),
+  sourceEvent: v.string(),
 });
 export type CreateAlertInput = v.InferInput<typeof CreateAlertInputSchema>;
 
