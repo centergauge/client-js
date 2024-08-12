@@ -32,4 +32,5 @@ export const FindingInputSchema = vg.input('FindingInput', {
   remediation: v.array(remediation),
   complianceStatus: v.array(compliance)
 });
+
 export type FindingInput = v.InferOutput<typeof FindingInputSchema>;
