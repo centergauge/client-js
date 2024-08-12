@@ -1,7 +1,6 @@
 import * as v from 'valibot';
 import * as vg from '../valibot-to-graphql.mjs';
 import {IdSchema} from '../id.mjs';
-import {AlertSchema} from '../alert/index.mjs';
 
 /**
   Impact: Impact is the measure of the potential damage the incident can cause. It's usually categorized as:
@@ -60,7 +59,6 @@ export const IncidentSchema = vg.type('Incident', {
   impact: ImpactRatingSchema,
   urgency: UrgencyRatingSchema,
   priority: PriorityRatingSchema,
-  originatingAlert: v.optional(AlertSchema),
   alerts: v.array(IdSchema),
   resources: v.array(v.string()),
 });
