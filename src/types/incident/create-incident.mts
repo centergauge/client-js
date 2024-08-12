@@ -12,7 +12,6 @@ import {
 export const CreateIncidentInputSchema = vg.input('CreateIncidentInput', {
   orgId: IdSchema,
   title: v.string(),
-  incidentManager: v.string(),
   status: IncidentStatusSchema,
   impact: ImpactRatingSchema,
   urgency: UrgencyRatingSchema,

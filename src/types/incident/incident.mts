@@ -57,7 +57,6 @@ export const IncidentSchema = vg.type('Incident', {
   orgId: IdSchema,
   orgName: v.string(),
   title: v.string(),
-  incidentManager: v.string(),
   status: IncidentStatusSchema,
   impact: ImpactRatingSchema,
   urgency: UrgencyRatingSchema,
