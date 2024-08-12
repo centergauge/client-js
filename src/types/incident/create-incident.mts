@@ -17,7 +17,6 @@ export const CreateIncidentInputSchema = vg.input('CreateIncidentInput', {
   urgency: UrgencyRatingSchema,
   alerts: v.array(v.string()),
   resources: v.array(v.string()),
-  project: v.boolean(),
 });
 export type CreateIncidentInput = v.InferInput<
   typeof CreateIncidentInputSchema

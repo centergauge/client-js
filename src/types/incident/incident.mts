@@ -2,7 +2,6 @@ import * as v from 'valibot';
 import * as vg from '../valibot-to-graphql.mjs';
 import {IdSchema} from '../id.mjs';
 import {AlertSchema} from '../alert/index.mjs';
-import {ResourceSchema} from '../resource/index.mjs';
 
 /**
   Impact: Impact is the measure of the potential damage the incident can cause. It's usually categorized as:
@@ -54,16 +53,16 @@ export type IncidentStatus = v.InferOutput<typeof IncidentStatusSchema>;
 
 export const IncidentSchema = vg.type('Incident', {
   id: IdSchema,
+  when: v.string(),
   orgId: IdSchema,
-  orgName: v.string(),
   title: v.string(),
   status: IncidentStatusSchema,
   impact: ImpactRatingSchema,
   urgency: UrgencyRatingSchema,
   priority: PriorityRatingSchema,
-  alerts: v.array(AlertSchema),
-  resources: v.array(ResourceSchema),
-  createdAt: v.number(),
+  originatingAlert: v.optional(AlertSchema),
+  alerts: v.array(IdSchema),
+  resources: v.array(v.string()),
 });
 export type Incident = v.InferOutput<typeof IncidentSchema>;
 
