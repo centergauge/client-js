@@ -462,6 +462,9 @@ function toGraphQLParamsString(schema: ObjectSchema<any, any>): string {
           str += `$${entryKey}: String${optional ? '' : '!'}, `;
         }
         break;
+      case 'number':
+        str += `$${entryKey}: Int${optional ? '' : '!'}, `;
+        break;
       case 'boolean':
         str += `$${entryKey}: Boolean${optional ? '' : '!'}, `;
         break;

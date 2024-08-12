@@ -7,8 +7,10 @@ import {AlertSchema} from './alert.mjs';
 export const ListAlertArgsSchema = v.object({
   orgId: IdSchema,
   nextPage: NextPageSchema,
-  startRange: v.optional(v.number()),
-  endRange: v.optional(v.number()),
+  limit: v.optional(v.number()),
+  start: v.optional(v.string()),
+  end: v.optional(v.string()),
+  project: v.boolean(),
 });
 export type ListAlertArgs = v.InferInput<typeof ListAlertArgsSchema>;
 
