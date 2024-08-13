@@ -5,7 +5,6 @@ import {IncidentSchema} from './incident.mjs';
 
 export const ListIncidentArgsSchema = v.object({
   orgId: IdSchema,
-  project: v.boolean(),
   page: v.optional(v.string()),
 });
 export type ListIncidentArgs = v.InferInput<typeof ListIncidentArgsSchema>;

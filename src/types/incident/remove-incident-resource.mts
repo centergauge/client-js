@@ -8,7 +8,6 @@ export const RemoveIncidentResourceInputSchema = vg.input(
   {
     incidentId: IdSchema,
     resource: v.string(),
-    project: v.boolean(),
   },
 );
 export type RemoveIncidentResourceInput = v.InferInput<

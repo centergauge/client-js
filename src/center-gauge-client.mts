@@ -84,7 +84,6 @@ import {
   CreateIncidentInputSchema,
   MergeIncidentInputSchema,
   RemoveIncidentAlertInputSchema,
-  UpdateIncidentInputSchema,
   getIncident,
   listIncident,
   addIncidentAlert,
@@ -93,11 +92,16 @@ import {
   mergeIncident,
   removeIncidentResource,
   removeIncidentAlert,
-  updateIncident,
   ListIncidentOutputSchema,
   getAlert,
   listAlert,
   ListAlertOutputSchema,
+  UpdateIncidentStatusInputSchema,
+  UpdateIncidentTitleInputSchema,
+  UpdateIncidentPriorityInputSchema,
+  updateIncidentStatus,
+  updateIncidentTitle,
+  updateIncidentPriority,
 } from './types/index.mjs';
 
 export interface ClientCredentialsConfig {
@@ -336,7 +340,9 @@ export class CenterGaugeClient {
         MergeIncidentInputSchema,
         RemoveIncidentAlertInputSchema,
         RemoveIncidentAlertInputSchema,
-        UpdateIncidentInputSchema,
+        UpdateIncidentStatusInputSchema,
+        UpdateIncidentTitleInputSchema,
+        UpdateIncidentPriorityInputSchema,
       ],
       unions: [PropertySchema, RelatedResourceSchema],
       queries: [
@@ -373,7 +379,9 @@ export class CenterGaugeClient {
         mergeIncident,
         removeIncidentAlert,
         removeIncidentResource,
-        updateIncident,
+        updateIncidentStatus,
+        updateIncidentTitle,
+        updateIncidentPriority,
       ],
     });
   }

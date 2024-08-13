@@ -7,7 +7,6 @@ export const RemoveIncidentAlertInputSchema = vg.input(
   {
     incidentId: v.string(),
     alert: v.string(),
-    project: v.boolean(),
   },
 );
 export type RemoveIncidentAlertInput = v.InferInput<

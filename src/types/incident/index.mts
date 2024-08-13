@@ -7,4 +7,6 @@ export * from './list-incident.mjs';
 export * from './merge-incident.mjs';
 export * from './remove-incident-alert.mjs';
 export * from './remove-incident-resource.mjs';
-export * from './update-incident.mjs';
+export * from './update-incident-priority.mjs';
+export * from './update-incident-status.mjs';
+export * from './update-incident-title.mjs';
