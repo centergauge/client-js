@@ -1,12 +1,14 @@
 import * as v from 'valibot';
 import * as vg from '../valibot-to-graphql.mjs';
 import {Incident, IncidentSchema} from './incident.mjs';
+import {IdSchema} from '../id.mjs';
 
 export const RemoveIncidentAlertInputSchema = vg.input(
   'RemoveIncidentAlertInput',
   {
-    incidentId: v.string(),
-    alert: v.string(),
+    orgId: IdSchema,
+    incidentId: IdSchema,
+    alert: IdSchema,
   },
 );
 export type RemoveIncidentAlertInput = v.InferInput<

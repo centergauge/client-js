@@ -4,6 +4,7 @@ import {IdSchema} from '../id.mjs';
 import {Incident, IncidentSchema} from './incident.mjs';
 
 export const GetIncidentArgsSchema = v.object({
+  orgId: IdSchema,
   id: IdSchema,
 });
 export type GetIncidentArgs = v.InferInput<typeof GetIncidentArgsSchema>;

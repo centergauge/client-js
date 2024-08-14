@@ -6,6 +6,7 @@ import {Incident, IncidentSchema} from './incident.mjs';
 export const RemoveIncidentResourceInputSchema = vg.input(
   'RemoveIncidentResourceInput',
   {
+    orgId: IdSchema,
     incidentId: IdSchema,
     resource: v.string(),
   },

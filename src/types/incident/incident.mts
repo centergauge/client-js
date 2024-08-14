@@ -61,6 +61,8 @@ export const IncidentSchema = vg.type('Incident', {
   priority: PriorityRatingSchema,
   alerts: v.array(IdSchema),
   resources: v.array(v.string()),
+  incidentManager: v.optional(IdSchema),
+  collaborators: v.array(IdSchema),
 });
 export type Incident = v.InferOutput<typeof IncidentSchema>;
 
