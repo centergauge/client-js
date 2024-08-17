@@ -106,11 +106,13 @@ import {
   RemoveIncidentCollaboratorInputSchema,
   removeIncidentCollaborator,
   addIncidentCollaborator,
-} from './types/index.mjs';
-import {
+  UpdateIncidentCollaboratorInputSchema,
   updateIncidentManager,
   UpdateIncidentManagerInputSchema,
-} from './types/incident/update-incident-manager.mjs';
+  updateIncidentCollaborator,
+  IncidentCollaboratorSchema,
+  IncidentCollaboratorInputSchema,
+} from './types/index.mjs';
 
 export interface ClientCredentialsConfig {
   readonly clientId: string | Promise<string>;
@@ -315,6 +317,7 @@ export class CenterGaugeClient {
         EventRouterSchema,
         ListEventRouterOutputSchema,
 
+        IncidentCollaboratorSchema,
         IncidentSchema,
         ListIncidentOutputSchema,
       ],
@@ -345,15 +348,17 @@ export class CenterGaugeClient {
         AddIncidentAlertInputSchema,
         AddIncidentResourceInputSchema,
         AddIncidentCollaboratorInputSchema,
+        IncidentCollaboratorInputSchema,
         CreateIncidentInputSchema,
         MergeIncidentInputSchema,
         RemoveIncidentAlertInputSchema,
         RemoveIncidentAlertInputSchema,
         RemoveIncidentCollaboratorInputSchema,
+        UpdateIncidentCollaboratorInputSchema,
+        UpdateIncidentManagerInputSchema,
+        UpdateIncidentPriorityInputSchema,
         UpdateIncidentStatusInputSchema,
         UpdateIncidentTitleInputSchema,
-        UpdateIncidentPriorityInputSchema,
-        UpdateIncidentManagerInputSchema,
       ],
       unions: [PropertySchema, RelatedResourceSchema],
       queries: [
@@ -394,6 +399,8 @@ export class CenterGaugeClient {
         removeIncidentCollaborator,
         updateIncidentStatus,
         updateIncidentTitle,
+        updateIncidentCollaborator,
+        updateIncidentManager,
         updateIncidentPriority,
         updateIncidentManager,
       ],

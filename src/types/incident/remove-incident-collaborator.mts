@@ -8,7 +8,7 @@ export const RemoveIncidentCollaboratorInputSchema = vg.input(
   {
     orgId: IdSchema,
     incidentId: IdSchema,
-    identityId: IdSchema,
+    id: IdSchema,
   },
 );
 export type RemoveIncidentCollaboratorInput = v.InferInput<

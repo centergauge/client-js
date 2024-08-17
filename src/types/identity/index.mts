@@ -2,3 +2,8 @@ export * from './create-identity.mjs';
 export * from './get-identity.mjs';
 export * from './identity.mjs';
 export * from './update-identity.mjs';
+export * from './create-identity-auto-mapping.mjs';
+export * from './identity-auto-mapping.mjs';
+export * from './find-identity-auto-mappings-by-domain.mjs';
+export * from './create-identity-org-assignment.mjs';
+export * from './identity-org-assignment.mjs';

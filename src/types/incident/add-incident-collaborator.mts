@@ -8,7 +8,10 @@ export const AddIncidentCollaboratorInputSchema = vg.input(
   {
     orgId: IdSchema,
     incidentId: IdSchema,
-    identityId: IdSchema,
+    name: v.string(),
+    title: v.optional(v.string()),
+    email: v.optional(v.pipe(v.string(), v.email())),
+    phone: v.optional(v.string()),
   },
 );
 export type AddIncidentCollaboratorInput = v.InferInput<

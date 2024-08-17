@@ -2,13 +2,14 @@ import * as v from 'valibot';
 import * as vg from '../valibot-to-graphql.mjs';
 import {IdSchema} from '../id.mjs';
 import {Incident, IncidentSchema} from './incident.mjs';
+import {IncidentCollaboratorInputSchema} from './incident-collaborator-input.mjs';
 
 export const UpdateIncidentManagerInputSchema = vg.input(
   'UpdateIncidentManagerInput',
   {
     orgId: IdSchema,
     incidentId: IdSchema,
-    managerId: v.optional(IdSchema),
+    incidentManager: IncidentCollaboratorInputSchema,
   },
 );
 export type UpdateIncidentManagerInput = v.InferInput<
