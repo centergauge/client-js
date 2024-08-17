@@ -112,6 +112,8 @@ import {
   updateIncidentCollaborator,
   IncidentCollaboratorSchema,
   IncidentCollaboratorInputSchema,
+  IncidentManagerInputSchema,
+  IncidentManagerSchema,
 } from './types/index.mjs';
 
 export interface ClientCredentialsConfig {
@@ -318,6 +320,7 @@ export class CenterGaugeClient {
         ListEventRouterOutputSchema,
 
         IncidentCollaboratorSchema,
+        IncidentManagerSchema,
         IncidentSchema,
         ListIncidentOutputSchema,
       ],
@@ -349,6 +352,7 @@ export class CenterGaugeClient {
         AddIncidentResourceInputSchema,
         AddIncidentCollaboratorInputSchema,
         IncidentCollaboratorInputSchema,
+        IncidentManagerInputSchema,
         CreateIncidentInputSchema,
         MergeIncidentInputSchema,
         RemoveIncidentAlertInputSchema,

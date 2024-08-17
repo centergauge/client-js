@@ -6,7 +6,7 @@ import {Incident, IncidentSchema} from './incident.mjs';
 export const AddIncidentAlertInputSchema = vg.input('AddIncidentAlertInput', {
   orgId: IdSchema,
   incidentId: IdSchema,
-  alertId: v.string(),
+  id: v.string(),
 });
 export type AddIncidentAlertInput = v.InferInput<
   typeof AddIncidentAlertInputSchema
