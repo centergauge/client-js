@@ -8,9 +8,11 @@ import {
 } from './incident.mjs';
 import {IncidentManagerSchema} from './incident-manager.mjs';
 import {AlertSchema} from '../alert/index.mjs';
+import {IdSchema} from '../id.mjs';
 
 export const IncidentOpenedEventSchema = v.object({
   ...EventSchema.entries,
+  incidentId: IdSchema,
   type: v.string('incident-opened'),
   orgName: v.string(),
   title: v.string(),
