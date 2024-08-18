@@ -6,7 +6,7 @@ import {AlertSchema} from './alert.mjs';
 
 export const ListAlertArgsSchema = v.object({
   orgId: IdSchema,
-  nextPage: NextPageSchema,
+  page: NextPageSchema,
   limit: v.optional(v.number()),
   start: v.optional(v.string()),
   end: v.optional(v.string()),

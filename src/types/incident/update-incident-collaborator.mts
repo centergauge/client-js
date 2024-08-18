@@ -11,7 +11,7 @@ export const UpdateIncidentCollaboratorInputSchema = vg.input(
   {
     orgId: IdSchema,
     incidentId: IdSchema,
-    id: IdSchema,
+    collaboratorId: IdSchema,
     name: v.string(),
     title: v.optional(v.string()),
     email: v.optional(v.pipe(v.string(), v.email())),

@@ -8,7 +8,7 @@ export const AddIncidentResourceInputSchema = vg.input(
   {
     orgId: IdSchema,
     incidentId: IdSchema,
-    id: v.string(),
+    resourceId: v.string(),
   },
 );
 export type AddIncidentResourceInput = v.InferInput<

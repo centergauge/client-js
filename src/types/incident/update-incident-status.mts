@@ -7,7 +7,7 @@ export const UpdateIncidentStatusInputSchema = vg.input(
   'UpdateIncidentStatusInput',
   {
     orgId: IdSchema,
-    id: IdSchema,
+    incidentId: IdSchema,
     status: IncidentStatusSchema,
   },
 );

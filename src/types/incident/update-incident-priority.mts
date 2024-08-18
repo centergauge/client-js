@@ -12,7 +12,7 @@ export const UpdateIncidentPriorityInputSchema = vg.input(
   'UpdateIncidentPriorityInput',
   {
     orgId: IdSchema,
-    id: IdSchema,
+    incidentId: IdSchema,
     impact: ImpactRatingSchema,
     urgency: UrgencyRatingSchema,
   },
