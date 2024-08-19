@@ -1,7 +1,7 @@
 {
   "name": "@centergauge/client",
   "description": "CenterGauge Client",
-  "version": "0.0.1-alpha.1",
+  "version": "0.0.65",
   "type": "module",
   "author": "CenterGauge, Inc",
   "publishConfig": {
@@ -16,22 +16,25 @@
     "**"
   ],
   "scripts": {
-    "codegen": "pnpx @aws-amplify/cli codegen && sed -i '' 's/\\.\\.\\/API/\\.\\.\\/API.js/g' src/graphql/* && prettier --write .",
     "build": "tsc",
-    "postbuild": "prettier --check . && gts lint && cp package.json dist",
+    "prebuild": "prettier --check . && eslint src",
+    "postbuild": "cp package.json README.md dist/ && pnpm run test",
     "watch": "tsc -w",
     "test": "vitest run --coverage",
-    "lint": "gts lint",
     "clean": "rm -rf dist && rm -rf site && rm -rf coverage",
-    "fix": "gts fix",
-    "makepretty": "prettier --write .",
+    "fmt": "prettier --write .",
     "site": "typedoc --out site \"src/**/*.ts\" --exclude \"src/**/*.test.ts\""
   },
   "devDependencies": {
+    "@eslint/js": "^8.57.0",
+    "@types/eslint__js": "^8.42.3",
+    "typescript-eslint": "^7.16.0",
+    "eslint": "^8.57.0",
+    "prettier": "^3.3.2",
     "@types/cookie": "^0.6.0",
+    "@types/js-yaml": "^4.0.9",
     "@types/node": "^20.14.2",
     "@vitest/coverage-v8": "^1.6.0",
-    "gts": "^5.3.1",
     "tslib": "^2.6.3",
     "typedoc": "^0.25.13",
     "typescript": "~5.4.5",
@@ -40,21 +43,24 @@
   "dependencies": {
     "@authsure/flow-client": "^0.0.4",
     "@aws-amplify/api-graphql": "^4.1.6",
-    "aws-amplify": "^6.3.6",
-    "axios": "^1.7.2",
-    "cookie": "^0.6.0"
+    "cookie": "^0.6.0",
+    "graphql": "^16.9.0",
+    "valibot": "^0.35.0"
   },
   "peerDependencies": {
     "@authsure/flow-client": "^0.0.4",
     "@aws-amplify/api-graphql": "^4.1.6",
     "aws-amplify": "^6.3.6",
-    "axios": "^1.7.2",
     "cookie": "^0.6.0"
   },
   "exports": {
     ".": {
-      "import": "./index.js",
-      "types": "./index.d.ts"
+      "import": "./index.mjs",
+      "types": "./index.d.mts"
+    },
+    "./types": {
+      "import": "./types/index.d.mts",
+      "types": "./types/index.d.mts"
     }
   }
 }
