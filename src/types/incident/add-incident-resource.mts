@@ -6,9 +6,9 @@ import {Incident, IncidentSchema} from './incident.mjs';
 export const AddIncidentResourceInputSchema = vg.input(
   'AddIncidentResourceInput',
   {
+    orgId: IdSchema,
     incidentId: IdSchema,
-    resource: v.string(),
-    project: v.boolean(),
+    resourceId: v.string(),
   },
 );
 export type AddIncidentResourceInput = v.InferInput<

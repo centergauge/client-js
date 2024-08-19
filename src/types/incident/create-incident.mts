@@ -8,6 +8,8 @@ import {
   IncidentStatusSchema,
   UrgencyRatingSchema,
 } from './incident.mjs';
+import {IncidentCollaboratorInputSchema} from './incident-collaborator-input.mjs';
+import {IncidentManagerInputSchema} from './incident-manager-input.mjs';
 
 export const CreateIncidentInputSchema = vg.input('CreateIncidentInput', {
   orgId: IdSchema,
@@ -17,6 +19,8 @@ export const CreateIncidentInputSchema = vg.input('CreateIncidentInput', {
   urgency: UrgencyRatingSchema,
   alerts: v.array(v.string()),
   resources: v.array(v.string()),
+  incidentManager: v.optional(IncidentManagerInputSchema),
+  collaborators: v.array(IncidentCollaboratorInputSchema),
 });
 export type CreateIncidentInput = v.InferInput<
   typeof CreateIncidentInputSchema

@@ -4,9 +4,9 @@ import {IdSchema} from '../id.mjs';
 import {Incident, IncidentSchema} from './incident.mjs';
 
 export const MergeIncidentInputSchema = vg.input('MergeIncidentInput', {
-  sourceId: IdSchema,
-  destinationId: IdSchema,
-  project: v.boolean(),
+  orgId: IdSchema,
+  sourceIncidentId: IdSchema,
+  targetIncidentId: IdSchema,
 });
 export type MergeIncidentInput = v.InferInput<typeof MergeIncidentInputSchema>;
 
