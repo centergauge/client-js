@@ -13,7 +13,7 @@ export type GetActiveIncidentForResourceArgs = v.InferInput<
 export const GetActiveIncidentForResourceOutputSchema = vg.type(
   'GetActiveIncidentForResourceOutput',
   {
-    id: v.string(),
+    resourceId: v.string(),
     incidentId: IdSchema,
     orgId: IdSchema,
   },

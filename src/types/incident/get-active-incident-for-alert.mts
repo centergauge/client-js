@@ -13,7 +13,7 @@ export type GetActiveIncidentForAlertArgs = v.InferInput<
 export const GetActiveIncidentForAlertOutputSchema = vg.type(
   'GetActiveIncidentForAlertOutput',
   {
-    id: v.string(),
+    alertId: IdSchema,
     incidentId: IdSchema,
     orgId: IdSchema,
   },
