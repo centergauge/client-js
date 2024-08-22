@@ -117,6 +117,7 @@ import {
   getActiveIncidentForAlert,
   getActiveIncidentForResource,
   GetActiveIncidentForResourceOutputSchema,
+  GetActiveIncidentForAlertOutputSchema,
 } from './types/index.mjs';
 
 export interface ClientCredentialsConfig {
@@ -326,6 +327,7 @@ export class CenterGaugeClient {
         IncidentManagerSchema,
         IncidentSchema,
         ListIncidentOutputSchema,
+        GetActiveIncidentForAlertOutputSchema,
         GetActiveIncidentForResourceOutputSchema,
       ],
       inputs: [
