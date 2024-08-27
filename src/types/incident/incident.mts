@@ -52,11 +52,18 @@ export const IncidentStatusSchema = v.picklist([
 ]);
 export type IncidentStatus = v.InferOutput<typeof IncidentStatusSchema>;
 
+export const IncidentTitleSchema = v.pipe(
+  v.string(),
+  v.minLength(1),
+  v.maxLength(200),
+);
+export type IncidentTitle = v.InferOutput<typeof IncidentTitleSchema>;
+
 export const IncidentSchema = vg.type('Incident', {
   id: IdSchema,
   when: v.string(),
   orgId: IdSchema,
-  title: v.string(),
+  title: IncidentTitleSchema,
   status: IncidentStatusSchema,
   impact: ImpactRatingSchema,
   urgency: UrgencyRatingSchema,
