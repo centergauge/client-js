@@ -9,7 +9,7 @@ export const GetIncidentArgsSchema = v.object({
 });
 export type GetIncidentArgs = v.InferInput<typeof GetIncidentArgsSchema>;
 
-export const getIncident = vg.query<GetIncidentArgs, Incident>(
+export const getIncident = vg.query<GetIncidentArgs, Incident | null>(
   'getIncident',
   GetIncidentArgsSchema,
   v.optional(IncidentSchema),
