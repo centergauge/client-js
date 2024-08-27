@@ -1,7 +1,7 @@
 {
   "name": "@centergauge/client",
   "description": "CenterGauge Client",
-  "version": "0.0.69",
+  "version": "0.0.70",
   "type": "module",
   "author": "CenterGauge, Inc",
   "publishConfig": {
