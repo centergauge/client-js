@@ -9,8 +9,8 @@ export const ListIncidentArgsSchema = v.object({
   status: v.optional(IncidentStatusSchema),
   page: NextPageSchema,
   limit: v.optional(v.number()),
-  start: v.optional(v.string()),
-  end: v.optional(v.string()),
+  start: v.optional(v.string()), // TODO Validate ISO date time format
+  end: v.optional(v.string()), // TODO Validate ISO date time format
 });
 export type ListIncidentArgs = v.InferInput<typeof ListIncidentArgsSchema>;
 
