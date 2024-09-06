@@ -8,7 +8,6 @@ export const ListIncidentArgsSchema = v.object({
   orgId: IdSchema,
   status: v.optional(IncidentStatusSchema),
   page: NextPageSchema,
-  limit: v.optional(v.number()),
   start: v.optional(v.string()), // TODO Validate ISO date time format
   end: v.optional(v.string()), // TODO Validate ISO date time format
 });
