@@ -23,3 +23,12 @@ export const ListIncidentResourceOutputSchema = vg.type(
 export type ListIncidentResourceOutput = v.InferOutput<
   typeof ListIncidentResourceOutputSchema
 >;
+
+export const listIncidentResource = vg.query<
+  ListIncidentResourceArgs,
+  ListIncidentResourceOutput
+>(
+  'listIncidentResource',
+  ListIncidentResourceArgsSchema,
+  ListIncidentResourceOutputSchema,
+);

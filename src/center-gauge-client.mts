@@ -118,10 +118,13 @@ import {
   getActiveIncidentForResource,
   GetActiveIncidentForResourceOutputSchema,
   GetActiveIncidentForAlertOutputSchema,
+  ListIncidentAlertOutputSchema,
+  ListIncidentResourceOutputSchema,
+  ListIncidentCollaboratorOutputSchema,
+  listIncidentAlert,
+  listIncidentCollaborator,
+  listIncidentResource,
 } from './types/index.mjs';
-import {ListIncidentAlertOutputSchema} from './types/incident/list-incident-alert.mjs';
-import {ListIncidentResourceOutputSchema} from './types/incident/list-incident-resource.mjs';
-import {ListIncidentCollaboratorOutputSchema} from './types/incident/list-incident-collaborator.mjs';
 
 export interface ClientCredentialsConfig {
   readonly clientId: string | Promise<string>;
@@ -393,6 +396,9 @@ export class CenterGaugeClient {
         getActiveIncidentForResource,
         getIncident,
         listIncident,
+        listIncidentAlert,
+        listIncidentCollaborator,
+        listIncidentResource,
       ],
       mutations: [
         createOrg,

@@ -24,3 +24,12 @@ export const ListIncidentCollaboratorOutputSchema = vg.type(
 export type ListIncidentCollaboratorOutput = v.InferOutput<
   typeof ListIncidentCollaboratorOutputSchema
 >;
+
+export const listIncidentCollaborator = vg.query<
+  ListIncidentCollaboratorArgs,
+  ListIncidentCollaboratorOutput
+>(
+  'listIncidentCollaborator',
+  ListIncidentCollaboratorArgsSchema,
+  ListIncidentCollaboratorOutputSchema,
+);
