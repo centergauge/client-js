@@ -7,6 +7,10 @@ export function isoDateToDate(isoDate: IsoDate): Date {
   return new Date(isoDate);
 }
 
+export function isoDateToTimestamp(isoDate: IsoDate): number {
+  return new Date(isoDate).getTime();
+}
+
 export function isoDateFromNow(): IsoDate {
   return new Date().toISOString();
 }
