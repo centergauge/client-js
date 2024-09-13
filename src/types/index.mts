@@ -1,6 +1,7 @@
 export * from './alert/index.mjs';
 export * from './event.mjs';
 export * from './event-router/index.mjs';
+export * from './operation-success.mjs';
 export * from './property.mjs';
 export * from './external-identifier/index.mjs';
 export * from './id.mjs';

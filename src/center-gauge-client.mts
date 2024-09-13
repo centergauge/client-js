@@ -124,6 +124,7 @@ import {
   listIncidentAlert,
   listIncidentCollaborator,
   listIncidentResource,
+  OperationSuccessSchema,
 } from './types/index.mjs';
 
 export interface ClientCredentialsConfig {
@@ -287,6 +288,8 @@ export class CenterGaugeClient {
   static graphQLSchema(): string {
     return toGraphQLSchemaString({
       types: [
+        OperationSuccessSchema,
+
         BooleanPropertySchema,
         StringPropertySchema,
         FloatPropertySchema,
