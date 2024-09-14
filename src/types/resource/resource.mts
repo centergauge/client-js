@@ -18,6 +18,9 @@ import {
 } from '../tag.mjs';
 import {IdSchema} from '../id.mjs';
 
+export const ResourceIdSchema = v.pipe(v.string(), v.maxLength(2048));
+export type ResourceId = v.InferOutput<typeof ResourceIdSchema>;
+
 export const RelationTypeSchema = v.picklist([
   'created',
   'createdBy',
@@ -60,7 +63,7 @@ export function isRelatedResourceReference(
 export const RelatedResourceProjectionSchema = vg.type(
   'RelatedResourceProjection',
   {
-    id: v.string(),
+    id: ResourceIdSchema,
     relationType: RelationTypeSchema,
     properties: v.array(PropertySchema),
     tags: v.array(TagSchema),
@@ -105,7 +108,7 @@ export type RelatedResource = v.InferOutput<typeof RelatedResourceSchema>;
 
 export const ResourceSchema = vg.type('Resource', {
   orgId: IdSchema,
-  id: v.string(),
+  id: ResourceIdSchema,
   properties: v.array(PropertySchema),
   tags: v.array(TagSchema),
   relations: v.array(RelatedResourceSchema),
@@ -141,7 +144,7 @@ export function resourceToRelatedResourceProjection(
 ///////////////////////////////////////////////////////////////////////////////
 export const RelatedResourceInputSchema = vg.input('RelatedResourceInput', {
   relationType: RelationTypeSchema,
-  id: v.string(),
+  id: ResourceIdSchema,
 });
 export type RelatedResourceInput = v.InferInput<
   typeof RelatedResourceInputSchema
@@ -157,7 +160,7 @@ export function isRelatedResourceInput(o: unknown): o is RelatedResourceInput {
 
 export const ResourceInputSchema = vg.input('ResourceInput', {
   orgId: IdSchema,
-  id: v.string(),
+  id: ResourceIdSchema,
   properties: v.array(PropertyInputSchema),
   tags: v.array(TagInputSchema),
   relations: v.array(RelatedResourceInputSchema),
@@ -190,7 +193,7 @@ export function isResourceInput(o: unknown): o is ResourceInput {
 ///////////////////////////////////////////////////////////////////////////////
 export const RelatedResourceReferenceRecordSchema = v.record(
   RelationTypeSchema,
-  v.array(v.string()),
+  v.array(ResourceIdSchema),
 );
 export type RelatedResourceReferenceRecord = v.InferOutput<
   typeof RelatedResourceReferenceRecordSchema
@@ -231,7 +234,7 @@ export function fromRelatedResourceReferenceRecord(
 }
 
 export const RelatedResourceProjectionRecordValueSchema = v.object({
-  id: v.string(),
+  id: ResourceIdSchema,
   properties: PropertyRecordSchema,
   tags: TagRecordSchema,
   relations: RelatedResourceReferenceRecordSchema,
@@ -372,7 +375,7 @@ export function fromRelatedResourceRecord(
 
 export const ResourceRecordSchema = v.object({
   orgId: IdSchema,
-  id: v.string(),
+  id: ResourceIdSchema,
   properties: PropertyRecordSchema,
   tags: TagRecordSchema,
   relations: RelatedResourceRecordSchema,

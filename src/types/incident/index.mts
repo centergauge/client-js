@@ -2,8 +2,6 @@ export * from './add-incident-alert.mjs';
 export * from './add-incident-collaborator.mjs';
 export * from './add-incident-resource.mjs';
 export * from './create-incident.mjs';
-export * from './get-active-incident-for-alert.mjs';
-export * from './get-active-incident-for-resource.mjs';
 export * from './get-incident.mjs';
 export * from './incident.mjs';
 export * from './incident-collaborator.mjs';

@@ -4,6 +4,7 @@ import {IdSchema} from '../id.mjs';
 import {IncidentSchema} from './incident.mjs';
 import {NextPageSchema, PageLimitSchema} from '../pagination.mjs';
 import {IsoDateSchema} from '../dates.mjs';
+import {ResourceIdSchema} from '../resource/index.mjs';
 
 export const ListIncidentStatusSchema = v.picklist([
   'active',
@@ -18,10 +19,13 @@ export type ListIncidentStatus = v.InferOutput<typeof ListIncidentStatusSchema>;
 export const ListIncidentArgsSchema = v.object({
   orgId: IdSchema,
   status: v.optional(ListIncidentStatusSchema),
-  page: NextPageSchema,
-  limit: PageLimitSchema,
+  alertId: v.optional(IdSchema),
+  resourceId: v.optional(ResourceIdSchema),
+  collaboratorEmail: v.optional(v.string()),
   start: v.optional(IsoDateSchema),
   end: v.optional(IsoDateSchema),
+  limit: PageLimitSchema,
+  page: NextPageSchema,
 });
 export type ListIncidentArgs = v.InferInput<typeof ListIncidentArgsSchema>;
 
