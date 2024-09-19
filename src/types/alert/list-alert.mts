@@ -1,15 +1,16 @@
 import * as v from 'valibot';
 import * as vg from '../valibot-to-graphql.mjs';
 import {IdSchema} from '../id.mjs';
-import {NextPageSchema} from '../next-page.mjs';
 import {AlertSchema} from './alert.mjs';
+import {NextPageSchema, PageLimitSchema} from '../pagination.mjs';
+import {IsoDateSchema} from '../dates.mjs';
 
 export const ListAlertArgsSchema = v.object({
   orgId: IdSchema,
   page: NextPageSchema,
-  limit: v.optional(v.number()),
-  start: v.optional(v.string()),
-  end: v.optional(v.string()),
+  limit: PageLimitSchema,
+  start: v.optional(IsoDateSchema),
+  end: v.optional(IsoDateSchema),
   project: v.boolean(),
 });
 export type ListAlertArgs = v.InferInput<typeof ListAlertArgsSchema>;

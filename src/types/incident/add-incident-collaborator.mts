@@ -1,7 +1,10 @@
 import * as v from 'valibot';
 import * as vg from '../valibot-to-graphql.mjs';
 import {IdSchema} from '../id.mjs';
-import {Incident, IncidentSchema} from './incident.mjs';
+import {
+  IncidentCollaborator,
+  IncidentCollaboratorSchema,
+} from './incident-collaborator.mjs';
 
 export const AddIncidentCollaboratorInputSchema = vg.input(
   'AddCollaboratorInput',
@@ -20,9 +23,9 @@ export type AddIncidentCollaboratorInput = v.InferInput<
 
 export const addIncidentCollaborator = vg.mutation<
   AddIncidentCollaboratorInput,
-  Incident
+  IncidentCollaborator
 >(
   'addIncidentCollaborator',
   AddIncidentCollaboratorInputSchema,
-  IncidentSchema,
+  IncidentCollaboratorSchema,
 );

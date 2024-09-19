@@ -6,7 +6,6 @@ import {
   PriorityRatingSchema,
   UrgencyRatingSchema,
 } from './incident.mjs';
-import {IncidentManagerSchema} from './incident-manager.mjs';
 import {AlertSchema} from '../alert/index.mjs';
 import {IdSchema} from '../id.mjs';
 
@@ -20,7 +19,7 @@ export const IncidentOpenedEventSchema = v.object({
   impact: ImpactRatingSchema,
   urgency: UrgencyRatingSchema,
   priority: PriorityRatingSchema,
-  incidentManager: v.optional(IncidentManagerSchema),
+  incidentManager: v.optional(IdSchema),
   firstAlert: v.optional(AlertSchema),
   link: v.string(),
 });

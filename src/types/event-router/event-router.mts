@@ -3,7 +3,7 @@ import * as vg from '../valibot-to-graphql.mjs';
 import {IdSchema} from '../id.mjs';
 import {WebhookSchema} from '../webhook/index.mjs';
 
-export const EventRouterTypeSchema = v.picklist(['alert']);
+export const EventRouterTypeSchema = v.picklist(['alert', 'incident-opened']);
 export type EventRouterType = v.InferOutput<typeof EventRouterTypeSchema>;
 
 export const EventRouterSchema = vg.type('EventRouter', {

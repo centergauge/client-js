@@ -112,10 +112,13 @@ import {
   updateIncidentCollaborator,
   IncidentCollaboratorSchema,
   IncidentCollaboratorInputSchema,
-  IncidentManagerInputSchema,
-  IncidentManagerSchema,
-  getActiveIncidentForAlert,
-  getActiveIncidentForResource,
+  ListIncidentAlertOutputSchema,
+  ListIncidentResourceOutputSchema,
+  ListIncidentCollaboratorOutputSchema,
+  listIncidentAlert,
+  listIncidentCollaborator,
+  listIncidentResource,
+  OperationSuccessSchema,
 } from './types/index.mjs';
 
 export interface ClientCredentialsConfig {
@@ -279,6 +282,8 @@ export class CenterGaugeClient {
   static graphQLSchema(): string {
     return toGraphQLSchemaString({
       types: [
+        OperationSuccessSchema,
+
         BooleanPropertySchema,
         StringPropertySchema,
         FloatPropertySchema,
@@ -322,9 +327,11 @@ export class CenterGaugeClient {
         ListEventRouterOutputSchema,
 
         IncidentCollaboratorSchema,
-        IncidentManagerSchema,
         IncidentSchema,
         ListIncidentOutputSchema,
+        ListIncidentAlertOutputSchema,
+        ListIncidentCollaboratorOutputSchema,
+        ListIncidentResourceOutputSchema,
       ],
       inputs: [
         PropertyInputSchema,
@@ -354,7 +361,6 @@ export class CenterGaugeClient {
         AddIncidentResourceInputSchema,
         AddIncidentCollaboratorInputSchema,
         IncidentCollaboratorInputSchema,
-        IncidentManagerInputSchema,
         CreateIncidentInputSchema,
         MergeIncidentInputSchema,
         RemoveIncidentAlertInputSchema,
@@ -379,10 +385,11 @@ export class CenterGaugeClient {
         listEventRouter,
         getAlert,
         listAlert,
-        getActiveIncidentForAlert,
-        getActiveIncidentForResource,
         getIncident,
         listIncident,
+        listIncidentAlert,
+        listIncidentCollaborator,
+        listIncidentResource,
       ],
       mutations: [
         createOrg,
