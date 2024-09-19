@@ -7,8 +7,6 @@ export * from './incident.mjs';
 export * from './incident-collaborator.mjs';
 export * from './incident-collaborator-input.mjs';
 export * from './incident-events.mjs';
-export * from './incident-manager.mjs';
-export * from './incident-manager-input.mjs';
 export * from './list-incident.mjs';
 export * from './list-incident-alert.mjs';
 export * from './list-incident-collaborator.mjs';
