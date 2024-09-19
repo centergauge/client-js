@@ -20,10 +20,10 @@ export const FindingSchema = vg.type('Finding', {
   accountId: v.string(), // TODO adding account and region makes them AWS specific, we should likely just point to the resource instead
   region: v.string(),
   updatedAt: v.string(), // TODO I'm not sure this is necessary, we should discuss.
-  severity: v.array(severity), // TODO You need a pick list
-  resourceId: v.array(resources), // TODO What is this?
-  remediation: v.array(remediation), // TODO What is this?
-  complianceStatus: v.array(compliance), // TODO What is this?
+  // severity: v.array(severity), // TODO You need a pick list
+  // resourceId: v.array(resources), // TODO What is this?
+  // remediation: v.array(remediation), // TODO What is this?
+  // complianceStatus: v.array(compliance), // TODO What is this?
 });
 export type Finding = v.InferOutput<typeof FindingSchema>;
 
@@ -35,11 +35,11 @@ export const FindingInputSchema = vg.input('FindingInput', {
   description: v.string(),
   accountId: v.string(),
   updatedAt: v.string(),
-  severity: v.array(severity),
+  // severity: v.array(severity),
   region: v.string(),
-  resourceId: v.array(resources),
-  remediation: v.array(remediation),
-  complianceStatus: v.array(compliance),
+  // resourceId: v.array(resources),
+  // remediation: v.array(remediation),
+  // complianceStatus: v.array(compliance),
 });
 
 export type FindingInput = v.InferOutput<typeof FindingInputSchema>;
