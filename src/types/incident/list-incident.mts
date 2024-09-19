@@ -1,16 +1,31 @@
 import * as v from 'valibot';
 import * as vg from '../valibot-to-graphql.mjs';
 import {IdSchema} from '../id.mjs';
-import {IncidentSchema, IncidentStatusSchema} from './incident.mjs';
-import {NextPageSchema} from '../next-page.mjs';
+import {IncidentSchema} from './incident.mjs';
+import {NextPageSchema, PageLimitSchema} from '../pagination.mjs';
+import {IsoDateSchema} from '../dates.mjs';
+import {ResourceIdSchema} from '../resource/index.mjs';
+
+export const ListIncidentStatusSchema = v.picklist([
+  'active',
+  'inactive',
+  'open',
+  'resolved',
+  'cancelled',
+  'suppressed',
+]);
+export type ListIncidentStatus = v.InferOutput<typeof ListIncidentStatusSchema>;
 
 export const ListIncidentArgsSchema = v.object({
   orgId: IdSchema,
-  status: v.optional(IncidentStatusSchema),
+  status: v.optional(ListIncidentStatusSchema),
+  alertId: v.optional(IdSchema),
+  resourceId: v.optional(ResourceIdSchema),
+  collaboratorEmail: v.optional(v.string()),
+  start: v.optional(IsoDateSchema),
+  end: v.optional(IsoDateSchema),
+  limit: PageLimitSchema,
   page: NextPageSchema,
-  limit: v.optional(v.number()),
-  start: v.optional(v.string()),
-  end: v.optional(v.string()),
 });
 export type ListIncidentArgs = v.InferInput<typeof ListIncidentArgsSchema>;
 

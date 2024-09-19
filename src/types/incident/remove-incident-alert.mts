@@ -1,7 +1,10 @@
 import * as v from 'valibot';
 import * as vg from '../valibot-to-graphql.mjs';
-import {Incident, IncidentSchema} from './incident.mjs';
 import {IdSchema} from '../id.mjs';
+import {
+  OperationSuccess,
+  OperationSuccessSchema,
+} from '../operation-success.mjs';
 
 export const RemoveIncidentAlertInputSchema = vg.input(
   'RemoveIncidentAlertInput',
@@ -17,5 +20,9 @@ export type RemoveIncidentAlertInput = v.InferInput<
 
 export const removeIncidentAlert = vg.mutation<
   RemoveIncidentAlertInput,
-  Incident
->('removeIncidentAlert', RemoveIncidentAlertInputSchema, IncidentSchema);
+  OperationSuccess
+>(
+  'removeIncidentAlert',
+  RemoveIncidentAlertInputSchema,
+  OperationSuccessSchema,
+);

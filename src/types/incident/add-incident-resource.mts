@@ -1,7 +1,10 @@
 import * as v from 'valibot';
 import * as vg from '../valibot-to-graphql.mjs';
 import {IdSchema} from '../id.mjs';
-import {Incident, IncidentSchema} from './incident.mjs';
+import {
+  OperationSuccess,
+  OperationSuccessSchema,
+} from '../operation-success.mjs';
 
 export const AddIncidentResourceInputSchema = vg.input(
   'AddIncidentResourceInput',
@@ -17,5 +20,9 @@ export type AddIncidentResourceInput = v.InferInput<
 
 export const addIncidentResource = vg.mutation<
   AddIncidentResourceInput,
-  Incident
->('addIncidentResource', AddIncidentResourceInputSchema, IncidentSchema);
+  OperationSuccess
+>(
+  'addIncidentResource',
+  AddIncidentResourceInputSchema,
+  OperationSuccessSchema,
+);

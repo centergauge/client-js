@@ -1,8 +1,6 @@
 import * as v from 'valibot';
 import * as vg from '../valibot-to-graphql.mjs';
 import {IdSchema} from '../id.mjs';
-import {IncidentCollaboratorSchema} from './incident-collaborator.mjs';
-import {IncidentManagerSchema} from './incident-manager.mjs';
 
 /**
   Impact: Impact is the measure of the potential damage the incident can cause. It's usually categorized as:
@@ -52,19 +50,23 @@ export const IncidentStatusSchema = v.picklist([
 ]);
 export type IncidentStatus = v.InferOutput<typeof IncidentStatusSchema>;
 
+export const IncidentTitleSchema = v.pipe(
+  v.string(),
+  v.minLength(1),
+  v.maxLength(200),
+);
+export type IncidentTitle = v.InferOutput<typeof IncidentTitleSchema>;
+
 export const IncidentSchema = vg.type('Incident', {
   id: IdSchema,
   when: v.string(),
   orgId: IdSchema,
-  title: v.string(),
+  title: IncidentTitleSchema,
   status: IncidentStatusSchema,
   impact: ImpactRatingSchema,
   urgency: UrgencyRatingSchema,
   priority: PriorityRatingSchema,
-  alerts: v.array(IdSchema),
-  resources: v.array(v.string()),
-  incidentManager: v.optional(IncidentManagerSchema),
-  collaborators: v.array(IncidentCollaboratorSchema),
+  incidentManager: v.optional(IdSchema),
 });
 export type Incident = v.InferOutput<typeof IncidentSchema>;
 
