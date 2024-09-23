@@ -2,7 +2,7 @@ import * as v from 'valibot';
 import * as vg from '../valibot-to-graphql.mjs';
 import {IdSchema} from '../id.mjs';
 import {IncidentCollaboratorSchema} from './incident-collaborator.mjs';
-import {PageTokenSchema, PageLimitSchema, PageSchema} from '../pagination.mjs';
+import {PageTokenSchema, PageLimitSchema} from '../pagination.mjs';
 
 export const ListIncidentCollaboratorArgsSchema = v.object({
   orgId: IdSchema,
@@ -18,7 +18,7 @@ export const ListIncidentCollaboratorOutputSchema = vg.type(
   'ListIncidentCollaboratorOutput',
   {
     items: v.array(IncidentCollaboratorSchema),
-    page: PageSchema,
+    nextPage: PageTokenSchema,
   },
 );
 export type ListIncidentCollaboratorOutput = v.InferOutput<

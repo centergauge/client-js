@@ -1,7 +1,7 @@
 import * as v from 'valibot';
 import * as vg from '../valibot-to-graphql.mjs';
 import {IdSchema} from '../id.mjs';
-import {PageTokenSchema, PageLimitSchema, PageSchema} from '../pagination.mjs';
+import {PageTokenSchema, PageLimitSchema} from '../pagination.mjs';
 
 export const ListIncidentAlertArgsSchema = v.object({
   orgId: IdSchema,
@@ -17,7 +17,7 @@ export const ListIncidentAlertOutputSchema = vg.type(
   'ListIncidentAlertOutput',
   {
     items: v.array(IdSchema),
-    page: PageSchema,
+    nextPage: PageTokenSchema,
   },
 );
 export type ListIncidentAlertOutput = v.InferOutput<
