@@ -2,7 +2,7 @@ import * as v from 'valibot';
 import * as vg from '../valibot-to-graphql.mjs';
 import {IdSchema} from '../id.mjs';
 import {IncidentSchema} from './incident.mjs';
-import {NextPageSchema, PageLimitSchema} from '../pagination.mjs';
+import {PageTokenSchema, PageLimitSchema, PageSchema} from '../pagination.mjs';
 import {IsoDateSchema} from '../dates.mjs';
 import {ResourceIdSchema} from '../resource/index.mjs';
 
@@ -25,13 +25,13 @@ export const ListIncidentArgsSchema = v.object({
   start: v.optional(IsoDateSchema),
   end: v.optional(IsoDateSchema),
   limit: PageLimitSchema,
-  page: NextPageSchema,
+  page: PageTokenSchema,
 });
 export type ListIncidentArgs = v.InferInput<typeof ListIncidentArgsSchema>;
 
 export const ListIncidentOutputSchema = vg.type('ListIncidentOutput', {
   items: v.array(IncidentSchema),
-  nextPage: NextPageSchema,
+  page: PageSchema,
 });
 export type ListIncidentOutput = v.InferOutput<typeof ListIncidentOutputSchema>;
 

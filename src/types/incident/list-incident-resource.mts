@@ -1,13 +1,13 @@
 import * as v from 'valibot';
 import * as vg from '../valibot-to-graphql.mjs';
 import {IdSchema} from '../id.mjs';
-import {NextPageSchema, PageLimitSchema} from '../pagination.mjs';
+import {PageTokenSchema, PageLimitSchema, PageSchema} from '../pagination.mjs';
 
 export const ListIncidentResourceArgsSchema = v.object({
   orgId: IdSchema,
   incidentId: IdSchema,
   limit: PageLimitSchema,
-  page: NextPageSchema,
+  page: PageTokenSchema,
 });
 export type ListIncidentResourceArgs = v.InferInput<
   typeof ListIncidentResourceArgsSchema
@@ -17,7 +17,7 @@ export const ListIncidentResourceOutputSchema = vg.type(
   'ListIncidentResourceOutput',
   {
     items: v.array(IdSchema),
-    nextPage: NextPageSchema,
+    page: PageSchema,
   },
 );
 export type ListIncidentResourceOutput = v.InferOutput<
