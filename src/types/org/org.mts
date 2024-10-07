@@ -18,6 +18,7 @@ export const OrgSchema = vg.type('Org', {
   darkIcon: v.optional(v.pipe(v.string(), v.url())),
   publicSignInEnabled: v.optional(v.boolean()),
   publicSupportEnabled: v.optional(v.boolean()),
+  isPartner: v.optional(v.boolean()),
 });
 
 export type Org = v.InferOutput<typeof OrgSchema>;

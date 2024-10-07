@@ -119,6 +119,13 @@ import {
   listIncidentCollaborator,
   listIncidentResource,
   OperationSuccessSchema,
+  PartnerConnectionSchema,
+  createPartnerConnection,
+  updatePartnerConnection,
+  CreatePartnerConnectionInputSchema,
+  UpdatePartnerConnectionInputSchema,
+  CreatePartnerConnectionOutputSchema,
+  UpdatePartnerConnectionOutputSchema,
 } from './types/index.mjs';
 
 export interface ClientCredentialsConfig {
@@ -332,6 +339,10 @@ export class CenterGaugeClient {
         ListIncidentAlertOutputSchema,
         ListIncidentCollaboratorOutputSchema,
         ListIncidentResourceOutputSchema,
+
+        PartnerConnectionSchema,
+        CreatePartnerConnectionOutputSchema,
+        UpdatePartnerConnectionOutputSchema,
       ],
       inputs: [
         PropertyInputSchema,
@@ -371,6 +382,9 @@ export class CenterGaugeClient {
         UpdateIncidentPriorityInputSchema,
         UpdateIncidentStatusInputSchema,
         UpdateIncidentTitleInputSchema,
+
+        CreatePartnerConnectionInputSchema,
+        UpdatePartnerConnectionInputSchema,
       ],
       unions: [PropertySchema, RelatedResourceSchema],
       queries: [
@@ -417,6 +431,8 @@ export class CenterGaugeClient {
         updateIncidentPriority,
         updateIncidentStatus,
         updateIncidentTitle,
+        createPartnerConnection,
+        updatePartnerConnection,
       ],
     });
   }
