@@ -58,14 +58,14 @@ export const IncidentTitleSchema = v.pipe(
 export type IncidentTitle = v.InferOutput<typeof IncidentTitleSchema>;
 
 export const IncidentSchema = vg.type('Incident', {
-  id: IdSchema,
+  id: IdSchema, // uuid
   when: v.string(),
-  orgId: IdSchema,
+  orgId: IdSchema, // uuid
   title: IncidentTitleSchema,
   status: IncidentStatusSchema,
   impact: ImpactRatingSchema,
   urgency: UrgencyRatingSchema,
-  priority: PriorityRatingSchema,
+  priority: PriorityRatingSchema, // calculated field
   incidentManager: v.optional(IdSchema),
 });
 export type Incident = v.InferOutput<typeof IncidentSchema>;
